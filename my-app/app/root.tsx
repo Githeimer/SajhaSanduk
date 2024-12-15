@@ -4,11 +4,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  LiveReload
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
 import {cssBundleHref} from "@remix-run/css-bundle";
 import styles from "./tailwind.css?url";
+
+import { SajhaSandukFooter } from "./components/Footer";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles }, // Tailwind CSS
@@ -24,15 +27,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body >
         {children}
         <ScrollRestoration />
         <Scripts />
+        <SajhaSandukFooter></SajhaSandukFooter>
       </body>
     </html>
   );
 }
 
 export default function App() {
-  return <Outlet />;
+  return <Outlet/>;
 }

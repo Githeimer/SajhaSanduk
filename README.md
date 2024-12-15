@@ -36,14 +36,18 @@ To set up and run the project locally, follow these steps:
    cd SajhaSanduk
    ```
 2. **Install Dependencies**
-  Install the necessary dependencies using npm:
+   Install the necessary dependencies using npm:
+
 ```bash
   npm install
 ```
+
 3. **Run the Development Server**
-  After the dependencies are installed and environment variables are set, start the development server:
+   After the dependencies are installed and environment variables are set, start the development server:
+
 ```bash
   npm run dev
 ```
+
 4. **Visit the Application**
-Open your browser and visit http://localhost:5173 to access the application.
+   Open your browser and visit http://localhost:5173 to access the application.

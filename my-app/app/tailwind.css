@@ -16,12 +16,17 @@
 body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
 }
 
 .landing_container {
   width: 100%; /* Allow it to take full width */
-  max-width: 1250px; /* Max width for larger screens */
+  max-width: 1250px; /* Restrict the maximum width */
+  flex-grow: 0; /* Prevent flexbox stretching */
+  flex-shrink: 0; /* Prevent shrinking */
+  box-sizing: border-box; /* Ensure padding/border doesn't affect width */
+  margin: 0 auto; /* Center the container horizontally */
 }
 
 #landing_quote {

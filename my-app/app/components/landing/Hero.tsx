@@ -7,7 +7,7 @@ type Props = {};
 
 const Hero = (props: Props) => {
   return (
-    <div className="relative flex justify-center" id="Hero_container">
+    <div className="relative flex justify-center" id="Hero_container ">
       {/* Icons Layer */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {/* Hammer */}
