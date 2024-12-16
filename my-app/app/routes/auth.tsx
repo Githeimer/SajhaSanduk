@@ -33,6 +33,7 @@ export default function Auth() {
           <CardDescription className="text-gray-500">   Login or create an account to get started.  </CardDescription>
         </CardHeader>
 
+
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-gray-100">
@@ -74,11 +75,11 @@ export default function Auth() {
 function LoginForm() {
   const isLoading=false;
   return (
-    <Form method="post" action="/auth?mode=signup" className="space-y-4">
+    <Form method="post" action="/auth/login" className="space-y-4">
    <div className="grid gap-4">
     <div className="grid gap-2">
       <Label htmlFor="email">Email</Label>
-      <Input id="email" type="email" placeholder="m@example.com" required />
+      <Input id="email" type="email" placeholder="m@example.com" required name="email" />
     </div>
     <div className="grid gap-2">
        <Label htmlFor="password">Password</Label>
@@ -101,7 +102,7 @@ function LoginForm() {
 function SignupForm() {
   const isLoading=false
   return (
-    <Form method="post" action="/auth?mode=signup" className="space-y-4">
+    <Form method="post" action="/auth/login" className="space-y-4">
       <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -115,7 +116,7 @@ function SignupForm() {
                   <Label htmlFor="confirm-password">Confirm Password</Label>
                   <Input id="confirm-password" type="password" required />
                 </div>
-                <Button disabled={isLoading} className="bg-slate-950  hover:bg-slate-900 text-white font-normal">
+                <Button disabled={isLoading} className="bg-slate-950  hover:bg-slate-900 text-white font-normal" type="submit">
                   {isLoading && (
                     <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
