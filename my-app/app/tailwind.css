@@ -6,6 +6,35 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --border: 228, 12%, 84%; /* Light gray for border */
+  --input: 0, 0%, 93%; /* Light gray for inputs */
+  --ring: 240, 5%, 91%;
+  --background: 0, 0%, 100%; /* White background */
+  --foreground: 240, 10%, 16%; /* Dark foreground */
+
+  --primary: 240, 100%, 62%;
+  --primary-foreground: 0, 0%, 100%;
+  --secondary: 240, 60%, 50%;
+  --secondary-foreground: 240, 100%, 98%;
+
+  --muted: 240, 10%, 96%;
+  --muted-foreground: 240, 8%, 44%;
+  --destructive: 0, 70%, 50%;
+  --destructive-foreground: 0, 100%, 98%;
+
+  --accent: 240, 85%, 62%;
+  --accent-foreground: 0, 0%, 100%;
+
+  --popover: 240, 5%, 96%;
+  --popover-foreground: 240, 10%, 20%;
+
+  --card: 240, 5%, 96%;
+  --card-foreground: 240, 10%, 20%;
+
+  --radius: 0.375rem; /* Tailwind's default border-radius */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,8 +45,9 @@
 body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
+  justify-content: space-around;
+  gap: 40px;
+  height: 100%;
 }
 
 .landing_container {

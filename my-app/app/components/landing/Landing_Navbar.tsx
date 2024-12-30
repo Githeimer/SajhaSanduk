@@ -36,13 +36,13 @@ const Landing_Navbar = (props: Props) => {
 
       {/* Sign Up and Login Buttons (Desktop) */}
       <div className="hidden md:flex flex-row items-center gap-1 text-lg">
-        <Link to="/auth?mode=login">
+        <Link to="/auth">
           <Button className='bg-[#2d20c0] text-white hover:bg-[#493ee8] w-32'>
             Login
           </Button>
         </Link>
-        <Link to="/auth?mode=signup">
-          <Button variant={'outline'} className='border-2 outline-blue-800 border-blue-700 hover:bg-[#ededee] text-[#2d20c0] w-32'>
+        <Link to="/auth">
+          <Button variant={'outline'} className='border-2 outline-blue-800 border-blue-700 hover:(bg-[#ededee] text-[#2d20c0]) w-32'>
             Sign Up
           </Button>
         </Link>

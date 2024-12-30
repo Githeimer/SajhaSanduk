@@ -1,13 +1,11 @@
 /** @type {import('@remix-run/dev').AppConfig} */
-module.exports = {
-  future: {
-    v2_routeConvention: true,
-    v2_meta: true,
-    v2_errorBoundary: true,
-    v2_normalizeFormMethod: true,
-  },
-  serverModuleFormat: "esm",
-  tailwind: true, // Ensure Tailwind is enabled
-  postcss: true, // Enable PostCSS
-  cssBundle: true, // Enable CSS bundling
+export const future = {
+  v2_routeConvention: true,
+  v2_meta: true,
+  v2_errorBoundary: true,
+  v2_normalizeFormMethod: true,
 };
+export const serverModuleFormat = "esm";
+export const tailwind = true;
+export const postcss = true;
+export const cssBundle = true;

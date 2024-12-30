@@ -2,7 +2,7 @@ import React from "react";
 
 export function SajhaSandukFooter() {
   return (
-    <footer className="w-full relative bg-gray-900 text-white">
+    <footer className="w-full relative bg-gray-900 text-white ">
       {/* Wavy Border */}
       <div className="absolute top-0 left-0 right-0 overflow-hidden -translate-y-full">
         <svg
@@ -17,6 +17,7 @@ export function SajhaSandukFooter() {
           />
         </svg>
       </div>
+      
 
       {/* Footer Content */}
       <div className="container mx-auto px-6 py-8">
