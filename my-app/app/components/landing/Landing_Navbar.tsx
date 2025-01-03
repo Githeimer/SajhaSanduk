@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+"use client"
+import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Link } from '@remix-run/react';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Importing icons for the hamburger menu

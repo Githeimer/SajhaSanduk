@@ -1,10 +1,13 @@
+import Hero from '@/components/Landing/Hero'
+import Navbar from '@/components/Landing/Navbar'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 
 const Home = () => {
   return (
-    <div>
-      <Button variant={"default"}>Home page of Sajha Sanduk</Button>
+    <div className='landing_container'>
+      <Navbar></Navbar>
+      <Hero></Hero>
     </div>
   )
 }
