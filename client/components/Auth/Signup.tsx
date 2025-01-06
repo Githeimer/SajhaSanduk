@@ -1,19 +1,22 @@
 import dynamic from "next/dynamic";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card } from "../ui/card";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast, Toaster } from "sonner";
 
-// Dynamically import the LocationMap with SSR disabled
 const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
 
 const SignupForm = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
-    location: [27.6193, 85.5385],
+    location: [27.6193, 85.5385], // Default location
     password: "",
   });
 
@@ -23,9 +26,11 @@ const SignupForm = () => {
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [showPasswordBar, setShowPasswordBar] = useState(false);
   const [showPasswordMatch, setShowPasswordMatch] = useState(false);
-  const [isPasswordStrong,setIsPasswordStrong]=useState(false);
+  const [isPasswordStrong, setIsPasswordStrong] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [Signerror,setSignError]=useState(null);
 
-  const handleInputChange = (e: { target: { name: string; value: string } }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
@@ -35,7 +40,7 @@ const SignupForm = () => {
     }
   };
 
-  const handleConfirmPasswordChange = (e: { target: { value: string } }) => {
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setConfirmPassword(value);
     setPasswordsMatch(value === formData.password);
@@ -45,17 +50,17 @@ const SignupForm = () => {
   const updatePasswordStrength = (password: string) => {
     if (password.length < 6) {
       setPasswordStrength(0); // Weak
-      setIsPasswordStrong(false)
+      setIsPasswordStrong(false);
     } else if (/[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password)) {
-      setIsPasswordStrong(true)
+      setIsPasswordStrong(true);
       setPasswordStrength(2); // Strong
     } else {
-      setIsPasswordStrong(false)
+      setIsPasswordStrong(false);
       setPasswordStrength(1); // Medium
     }
   };
 
-  const handleLocationChange = (newLocation: any) => {
+  const handleLocationChange = (newLocation: [number, number]) => {
     setFormData((prev) => ({
       ...prev,
       location: newLocation,
@@ -64,10 +69,6 @@ const SignupForm = () => {
 
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => !prev);
-  };
-
-  const handleRegisterSubmit = () => {
-    console.log(formData);
   };
 
   const isFormValid =
@@ -81,23 +82,55 @@ const SignupForm = () => {
   const getPasswordStrengthColor = () => {
     switch (passwordStrength) {
       case 0:
-       
         return "bg-red-500"; // Weak
       case 1:
-      
         return "bg-yellow-500"; // Medium
       case 2:
-      
         return "bg-green-500"; // Strong
       default:
-       
         return "bg-gray-300";
     }
   };
+ 
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("api/users/signup", formData);
+  
+      console.log("Signup API HIT");
+  
+      if (response.data.success) {
+        toast.success("Signup successful!");
+        router.push("/auth");
+        setFormData({ fullName: "",
+          email: "",
+          phone: "",
+          location: [27.6193, 85.5385], 
+          password: "",})
+          setShowPasswordBar(false);
+      } else {
+        setSignError(response.data.message || "An error occurred during signup.");
+      }
+    } catch (error: any) {
+      console.error("Signup error:", error.message);
+      setSignError(error.response?.data?.message || "Unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  
+  useEffect(() => {
+    if (Signerror) {
+      toast.error(Signerror); 
+    }
+  }, [Signerror]);
+  
+ 
 
   return (
     <div className="grid gap-4">
-      {/* Form fields */}
+      <Toaster /> 
       <div className="grid gap-2">
         <Label htmlFor="fullname">Name</Label>
         <Input
@@ -134,7 +167,7 @@ const SignupForm = () => {
         />
       </div>
 
-      {/* Password fields */}
+     
       <div className="grid gap-2">
         <Label htmlFor="password">Password</Label>
         <Input
@@ -146,7 +179,6 @@ const SignupForm = () => {
           value={formData.password}
           onChange={handleInputChange}
         />
-        {/* Password Strength Bar */}
         {showPasswordBar && (
           <div className="w-full h-2 mt-1 bg-gray-300 rounded-full">
             <div
@@ -193,15 +225,15 @@ const SignupForm = () => {
         </p>
       </div>
 
-      {/* Submit Button */}
+   
       <Button
-        disabled={!isFormValid}
+        disabled={!isFormValid || loading}
         className={`bg-slate-950 hover:bg-slate-900 text-white font-normal ${
-          !isFormValid ? "opacity-50 cursor-not-allowed" : ""
+          !isFormValid || loading ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        onClick={handleRegisterSubmit}
+        onClick={handleSubmit}
       >
-        Create Account
+        {loading ? "Loading..." : "Create Account"}
       </Button>
     </div>
   );
