@@ -4,11 +4,14 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card } from "../ui/card";
+import axios from 'axios';
+import { useRouter } from "next/navigation";
 
-// Dynamically import the LocationMap with SSR disabled
 const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
 
 const SignupForm = () => {
+
+  const router=useRouter();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -24,6 +27,9 @@ const SignupForm = () => {
   const [showPasswordBar, setShowPasswordBar] = useState(false);
   const [showPasswordMatch, setShowPasswordMatch] = useState(false);
   const [isPasswordStrong,setIsPasswordStrong]=useState(false);
+  const [error,setError]=useState(null);
+  const [Loading,setLoading]=useState(false);
+
 
   const handleInputChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -94,6 +100,28 @@ const SignupForm = () => {
         return "bg-gray-300";
     }
   };
+
+  const handleSubmit= async ()=>{
+    try {
+      setLoading(true);
+      const response:any=await axios.post("api/users/signup",formData);
+
+      console.log("Signup API HIT");
+      if(response.ok)
+      {
+        router.push("/");
+      }
+
+      setError(response.data.error);
+      
+    } catch (error:any) {
+      setError(error.message);
+    }
+    finally{
+      setLoading(false);
+    }
+
+  }
 
   return (
     <div className="grid gap-4">
@@ -199,7 +227,7 @@ const SignupForm = () => {
         className={`bg-slate-950 hover:bg-slate-900 text-white font-normal ${
           !isFormValid ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        onClick={handleRegisterSubmit}
+        onClick={handleSubmit}
       >
         Create Account
       </Button>
