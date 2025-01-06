@@ -1,6 +1,6 @@
 ﻿# Sajha Sanduk 🧰
 
-![Sajha Sanduk Logo](my-app/public/logo.png)
+![Sajha Sanduk Logo](client/public/logo.png)
 
 Sajha Sanduk is a community-centered tool library initiative aiming to promote **resource sharing**, **sustainability**, and **neighborhood collaboration**. The project focuses on offering tools to the community for borrowing rather than buying, addressing underutilized personal equipment and reducing spending.
 
