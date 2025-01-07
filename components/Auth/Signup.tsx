@@ -16,12 +16,12 @@ const SignupForm = () => {
     fullName: "",
     email: "",
     phone: "",
-    location: [27.6193, 85.5385], // Default location
+    location: [27.6193, 85.5385], 
     password: "",
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordStrength, setPasswordStrength] = useState(0); // 0 = Weak, 1 = Medium, 2 = Strong
+  const [passwordStrength, setPasswordStrength] = useState(0); 
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [showPasswordBar, setShowPasswordBar] = useState(false);
@@ -101,7 +101,7 @@ const SignupForm = () => {
   
       if (response.data.success) {
         toast.success("Signup successful!");
-        router.push("/auth");
+        router.push("/login");
         setFormData({ fullName: "",
           email: "",
           phone: "",

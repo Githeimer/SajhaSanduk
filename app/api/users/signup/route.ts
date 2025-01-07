@@ -1,6 +1,6 @@
 import supabase from "@/config/dbConfig";
 import { NextResponse, NextRequest } from "next/server";
-import FindingUserByEmail from "@/app/helpers/db/UniqueUser";
+import FindingUserByEmail from "@/helpers/db/UniqueUser"
 import bcryptjs from "bcryptjs";
 
 export async function POST(request: NextRequest) {
@@ -91,3 +91,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

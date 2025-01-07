@@ -34,7 +34,6 @@ export default function LoginForm() {
       setIsLoading(false);
     }
   };
-
  
   if (loginError) {
     toast.error(loginError);

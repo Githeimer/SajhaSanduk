@@ -2,7 +2,7 @@ import supabase from "@/config/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import FindingUserByEmail from "@/app/helpers/db/UniqueUser";
+import FindingUserByEmail from "@/helpers/db/UniqueUser";
 
 export async function POST(request: NextRequest) {
   try {
