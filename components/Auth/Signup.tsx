@@ -16,24 +16,23 @@ const SignupForm = () => {
     fullName: "",
     email: "",
     phone: "",
-    location: [27.6193, 85.5385], 
+    location: [27.6193, 85.5385],
     password: "",
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordStrength, setPasswordStrength] = useState(0); 
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [showPasswordBar, setShowPasswordBar] = useState(false);
   const [showPasswordMatch, setShowPasswordMatch] = useState(false);
   const [isPasswordStrong, setIsPasswordStrong] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [Signerror,setSignError]=useState(null);
+  const [Signerror, setSignError] = useState(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
     if (name === "password") {
       updatePasswordStrength(value);
       setShowPasswordBar(value.length > 0);
@@ -49,14 +48,14 @@ const SignupForm = () => {
 
   const updatePasswordStrength = (password: string) => {
     if (password.length < 6) {
-      setPasswordStrength(0); // Weak
+      setPasswordStrength(0);
       setIsPasswordStrong(false);
     } else if (/[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password)) {
       setIsPasswordStrong(true);
-      setPasswordStrength(2); // Strong
+      setPasswordStrength(2);
     } else {
       setIsPasswordStrong(false);
-      setPasswordStrength(1); // Medium
+      setPasswordStrength(1);
     }
   };
 
@@ -82,55 +81,50 @@ const SignupForm = () => {
   const getPasswordStrengthColor = () => {
     switch (passwordStrength) {
       case 0:
-        return "bg-red-500"; // Weak
+        return "bg-red-500";
       case 1:
-        return "bg-yellow-500"; // Medium
+        return "bg-yellow-500";
       case 2:
-        return "bg-green-500"; // Strong
+        return "bg-green-500";
       default:
         return "bg-gray-300";
     }
   };
- 
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
       const response = await axios.post("api/users/signup", formData);
-  
-      console.log("Signup API HIT");
-  
       if (response.data.success) {
         toast.success("Signup successful!");
         router.push("/login");
-        setFormData({ fullName: "",
+        setFormData({
+          fullName: "",
           email: "",
           phone: "",
-          location: [27.6193, 85.5385], 
-          password: "",})
-          setShowPasswordBar(false);
+          location: [27.6193, 85.5385],
+          password: "",
+        });
+        setShowPasswordBar(false);
       } else {
         setSignError(response.data.message || "An error occurred during signup.");
       }
     } catch (error: any) {
-      console.error("Signup error:", error.message);
       setSignError(error.response?.data?.message || "Unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
-  
-  
+
   useEffect(() => {
     if (Signerror) {
-      toast.error(Signerror); 
+      toast.error(Signerror);
     }
   }, [Signerror]);
-  
- 
 
   return (
     <div className="grid gap-4">
-      <Toaster /> 
+      <Toaster />
       <div className="grid gap-2">
         <Label htmlFor="fullname">Name</Label>
         <Input
@@ -166,8 +160,6 @@ const SignupForm = () => {
           onChange={handleInputChange}
         />
       </div>
-
-     
       <div className="grid gap-2">
         <Label htmlFor="password">Password</Label>
         <Input
@@ -190,7 +182,6 @@ const SignupForm = () => {
           </div>
         )}
       </div>
-
       <div className="grid gap-2">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
         <Input
@@ -210,8 +201,6 @@ const SignupForm = () => {
           <p className="text-red-500 text-xs mt-1">Passwords do not match.</p>
         )}
       </div>
-
-      {/* Location Map Dropdown */}
       <div className="grid gap-2">
         <Label htmlFor="location">Location</Label>
         <Card>
@@ -224,8 +213,6 @@ const SignupForm = () => {
           Location (Optional, recommended for better suggestions)
         </p>
       </div>
-
-   
       <Button
         disabled={!isFormValid || loading}
         className={`bg-slate-950 hover:bg-slate-900 text-white font-normal ${

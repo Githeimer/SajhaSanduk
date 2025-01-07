@@ -4,29 +4,29 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 
-import { FaBars, FaTimes } from 'react-icons/fa'; // Importing icons for the hamburger menu
+import { FaBars, FaTimes } from 'react-icons/fa'; 
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const [menuOpen, setMenuOpen] = useState(false); // For toggling the menu on mobile
+  const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
-    <div className='flex flex-row p-3 justify-between items-center relative'>
+    <div className='flex flex-row p-3 justify-between items-center relative landing_container font-[inter]'>
       {/* Logo and Title */}
-      <div className='flex flex-row items-center gap-1'>
+      <div className='flex flex-row items-center '>
         <span className='font-bold text-3xl'>
-          <span className='text-[#2d20c0]'>Sajha</span> Sanduk
+          <span className='text-[#2d20c0] '>Sajha</span> Sanduk
         </span>
       </div>
 
       {/* Navbar Links (Desktop) */}
-      <div className="hidden md:flex flex-row items-center gap-4 text-sm font-medium cursor-pointer">
-        <ul className="flex flex-row items-center gap-4">
-          <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105">Shop</li>
-          <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105">About</li>
-          <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105">Team</li>
-          <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105">Contact</li>
+      <div className="hidden md:flex flex-row items-center  justify-center gap-3 font-bold cursor-pointer">
+        <ul className="flex flex-row items-center  gap-4">
+         
+          <Link href={"/marketplace"}>Market</Link>
+          <Link href={"/"}>About</Link>
+          <Link href={"/"}>Team</Link>
         </ul>
       </div>
 

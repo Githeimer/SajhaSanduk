@@ -23,11 +23,10 @@ const LocationMap = ({ onLocationChange }) => {
     shadowSize: [41, 41],
   });
 
-  // Handle the dragging of the marker
   const handleMarkerDrag = (e) => {
     const { lat, lng } = e.target.getLatLng();
     setMarkerPosition([lat, lng]);
-    onLocationChange(`${lat},${lng}`);
+    onLocationChange([lat, lng]); // Pass the array instead of string
   };
 
   const MapClickHandler = () => {
@@ -35,7 +34,7 @@ const LocationMap = ({ onLocationChange }) => {
       click(e) {
         const { lat, lng } = e.latlng;
         setMarkerPosition([lat, lng]);
-        onLocationChange(`${lat},${lng}`);
+        onLocationChange([lat, lng]); // Pass the array instead of string
       },
     });
     return null;

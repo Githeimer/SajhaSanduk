@@ -15,7 +15,7 @@ export default function LoginForm() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
     try {
       setIsLoading(true);
@@ -23,21 +23,21 @@ export default function LoginForm() {
 
       if (response.data.success) {
         toast.success("Login successful!");
-        router.push("/marketplace"); 
+        router.push("/marketplace");
       } else {
-        setLoginError(response.data.message || "An error occurred during login.");
+        setLoginError(response.data.error || "An error occurred during login.");
       }
     } catch (error: any) {
       console.error("Login error:", error.message);
-      setLoginError(error.response?.data?.message || "Unexpected error occurred.");
+      setLoginError(error.response?.data?.error || "Unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
   };
- 
+
   if (loginError) {
     toast.error(loginError);
-    setLoginError(null);  
+    setLoginError(null); // Clear the error after showing the toast
   }
 
   return (
@@ -73,7 +73,7 @@ export default function LoginForm() {
       <Button
         disabled={isLoading}
         className="bg-slate-950 hover:bg-slate-900 text-white font-normal"
-        type="submit" 
+        type="submit"
       >
         {isLoading && (
           <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">

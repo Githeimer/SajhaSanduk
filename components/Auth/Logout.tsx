@@ -11,10 +11,11 @@ const router=useRouter();
     const handleLogout=async()=>{
         try {
             const response:any= await axios.get("api/users/logout");
-
-            if(!response.ok)
+            console.log(response);
+            if(!response.data.success)
             {
               toast.error(response.data.error);
+              return;
             }
 
             toast.success("Logout Successful");

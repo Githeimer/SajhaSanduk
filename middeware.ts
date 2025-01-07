@@ -1,42 +1,36 @@
 import { NextResponse, NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; 
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const token = request.cookies.get('token')?.value || '';
-  const isPublicPath = ['/login', '/signup', '/'].includes(path);
-  
+
+  const isPublicPath = path === '/login' || path === '/signup';
+
+  // If user is already logged in and tries to visit login or signup page
   if (isPublicPath && token) {
-    try {
-      jwt.verify(token, process.env.TOKEN_SECRET || '');
-      return NextResponse.redirect(new URL('/profile', request.nextUrl.origin));
-    } catch (error) {
-      console.error('Invalid token on public path:', error);
-      return NextResponse.redirect(new URL('/login', request.nextUrl.origin));
-    }
+    return NextResponse.redirect(new URL('/marketplace', request.nextUrl.origin));
   }
 
+  // If the user is not logged in and tries to access protected routes
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL('/login', request.nextUrl.origin));
   }
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.TOKEN_SECRET || '');
-      console.log('Token decoded:', decoded);
-    } catch (error) {
-      console.error('Token verification failed:', error);
-      return NextResponse.redirect(new URL('/login', request.nextUrl.origin));
+  
+  try {
+    if (token) {
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET!); 
+    
     }
+  } catch (error) {
+  
+    return NextResponse.redirect(new URL('/login', request.nextUrl.origin));
   }
 
-  const response = NextResponse.next();
-  response.headers.set('Cache-Control', 'no-store');
-  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'], 
+  matcher: ['/profile', '/dashboard', '/marketplace'], 
 };

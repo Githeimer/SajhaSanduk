@@ -1,6 +1,5 @@
 import supabase from "@/config/dbConfig";
 import { NextResponse, NextRequest } from "next/server";
-import FindingUserByEmail from "@/helpers/db/UniqueUser"
 import bcryptjs from "bcryptjs";
 
 export async function POST(request: NextRequest) {
@@ -9,51 +8,51 @@ export async function POST(request: NextRequest) {
 
     if (!fullName || !email || !phone || !password) {
       return NextResponse.json(
-        {
-          message: "All fields (except location) are required.",
-          success: false,
-        },
+        { message: "All fields (except location) are required.", success: false },
         { status: 400 }
       );
     }
 
-    if (location && (!Array.isArray(location) || location.length !== 2)) {
+ 
+
+    const { data: userByEmail } = await supabase
+      .from("user_info")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    if (userByEmail) {
       return NextResponse.json(
-        {
-          message: "Invalid location. It must be an array of two numeric values (latitude and longitude).",
-          success: false,
-        },
-        { status: 400 }
+        { message: "Email is already in use.", success: false },
+        { status: 409 }
       );
     }
 
-    //  if user already exists
-    const userCheck = await FindingUserByEmail(email);
-    if (userCheck.ok && userCheck.data) {
+    const { data: userByPhone } = await supabase
+      .from("user_info")
+      .select("*")
+      .eq("phonenumber", phone)
+      .single();
+
+    if (userByPhone) {
       return NextResponse.json(
-        {
-          message: "Error while registering user.",
-          error: `User already exists with email: ${email}`,
-          success: false,
-        },
-        { status: 409 } 
+        { message: "Phone number is already in use.", success: false },
+        { status: 409 }
       );
     }
 
-    // Hash password
-    const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
-    
     const userData = {
       name: fullName,
-      email: email,
+      email,
       phonenumber: phone,
-      location: location || null, 
+      location: location || null,
       password: hashedPassword,
     };
 
-    // Insert user data into Supabase
+    console.log(userData);
+
     const { data, error } = await supabase
       .from("user_info")
       .insert([userData])
@@ -61,34 +60,20 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        {
-          message: "Error while registering user.",
-          error: error.message,
-          success: false,
-        },
+        { message: "Failed to register user.", error: error.message, success: false },
         { status: 500 }
       );
     }
 
     return NextResponse.json(
-      {
-        message: "Signup successful.",
-        data: data,
-        success: true,
-      },
-      { status: 201 } 
+      { message: "Signup successful.", success: true, data },
+      { status: 201 }
     );
   } catch (error: any) {
     console.error("Unexpected error during signup:", error.message);
-
     return NextResponse.json(
-      {
-        message: "An unexpected error occurred during signup.",
-        error: error.message,
-        success: false,
-      },
+      { message: "An unexpected error occurred.", error: error.message || "Unknown error", success: false },
       { status: 500 }
     );
   }
 }
-

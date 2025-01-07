@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -71,6 +73,33 @@ body {
   flex-shrink: 0; /* Prevent shrinking */
   box-sizing: border-box; /* Ensure padding/border doesn't affect width */
   margin: 0 auto; /* Center the container horizontally */
+}
+
+.landing_btn:focus {
+  outline: none;
+}
+
+.glow-effect {
+  background: white;
+  padding: 15px;
+
+  box-shadow: 0 0 8px rgba(255, 0, 255, 0.2), 0 0 16px rgba(255, 0, 255, 0.1),
+    0 0 24px rgba(0, 0, 255, 0.2), 0 0 32px rgba(0, 255, 255, 0.1);
+  position: relative;
+  animation: glow-animation 3s infinite alternate;
+}
+
+@keyframes glow-animation {
+  0% {
+    box-shadow: 0 0 6px rgba(255, 0, 255, 0.15),
+      0 0 12px rgba(255, 0, 255, 0.02), 0 0 18px rgba(0, 0, 255, 0.15),
+      0 0 24px rgba(0, 255, 255, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(255, 0, 255, 0.2),
+      0 0 24px rgba(255, 0, 255, 0.03), 0 0 36px rgba(0, 0, 255, 0.2),
+      0 0 48px rgba(0, 255, 255, 0.02);
+  }
 }
 
 @layer base {
