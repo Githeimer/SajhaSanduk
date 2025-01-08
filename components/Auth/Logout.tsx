@@ -17,7 +17,6 @@ const router=useRouter();
               toast.error(response.data.error);
               return;
             }
-
             toast.success("Logout Successful");
             router.push("/login");
             
