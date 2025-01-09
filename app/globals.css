@@ -68,11 +68,16 @@ body {
 
 .landing_container {
   width: 100%; /* Allow it to take full width */
-  max-width: 1350px; /* Restrict the maximum width */
+  max-width: 1300px; /* Restrict the maximum width */
   flex-grow: 0; /* Prevent flexbox stretching */
   flex-shrink: 0; /* Prevent shrinking */
   box-sizing: border-box; /* Ensure padding/border doesn't affect width */
   margin: 0 auto; /* Center the container horizontally */
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  color: black;
 }
 
 .landing_btn:focus {
@@ -83,16 +88,16 @@ body {
   background: white;
   padding: 15px;
 
-  box-shadow: 0 0 8px rgba(255, 0, 255, 0.2), 0 0 16px rgba(255, 0, 255, 0.1),
+  box-shadow: 0 0 8px rgba(255, 0, 255, 0.2), 0 0 16px rgba(255, 0, 255, 0.3),
     0 0 24px rgba(0, 0, 255, 0.2), 0 0 32px rgba(0, 255, 255, 0.1);
   position: relative;
-  animation: glow-animation 3s infinite alternate;
+  animation: glow-animation 2s infinite alternate;
 }
 
 @keyframes glow-animation {
   0% {
-    box-shadow: 0 0 6px rgba(255, 0, 255, 0.15),
-      0 0 12px rgba(255, 0, 255, 0.02), 0 0 18px rgba(0, 0, 255, 0.15),
+    box-shadow: 0 0 6px rgba(255, 0, 255, 0.25),
+      0 0 12px rgba(255, 0, 255, 0.02), 0 0 18px rgba(0, 0, 255, 0.25),
       0 0 24px rgba(0, 255, 255, 0.05);
   }
   100% {

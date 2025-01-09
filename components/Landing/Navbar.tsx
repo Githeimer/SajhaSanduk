@@ -12,7 +12,7 @@ const Navbar = (props: Props) => {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
-    <div className='flex flex-row p-3 justify-between items-center relative landing_container font-[inter]'>
+    <div className='flex flex-row p-3 justify-between items-center relative landing_container font-[inter] '>
       {/* Logo and Title */}
       <div className='flex flex-row items-center '>
         <span className='font-bold text-3xl'>
