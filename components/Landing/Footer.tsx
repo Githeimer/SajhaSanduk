@@ -15,7 +15,7 @@ export default function Footer() {
         </div>
 
         {/* Right side: Links */}
-        <div className="flex space-x-6">
+        <div className="flex ">
           <Link href="/" passHref>
             <Button variant="link" className=" text-white ">Home</Button>
           </Link>

@@ -11,6 +11,7 @@ export default {
   	extend: {
 		backgroundImage:{
 			'hero-pattern':"url('/grid.avif')",
+			'features-pattern':"url('https://static.vecteezy.com/system/resources/thumbnails/011/887/512/small/halftone-dotted-background-free-png.png')",
 		},
   		colors: {
   			background: 'hsl(var(--background))',

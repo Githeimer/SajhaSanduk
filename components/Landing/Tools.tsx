@@ -10,38 +10,38 @@ const Tools = () => {
   return (
     <div className="w-full">
       <div className="landing_container">
-        <div className="flex flex-row justify-evenly p-4 text-3xl gap-6 items-center">
+        <div className="flex flex-row w-full p-4 text-3xl gap-4 md:gap-20 items-center">
           <Link href="#">
             <div className="relative text-center group">
-              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full bg-[#dbe7ff] opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
+              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
               <FaTools className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Tools</p>
             </div>
           </Link>
           <Link href="#">
             <div className="relative text-center group">
-              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full bg-[#ffdada] opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
+              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
               <MdOutlineMenuBook className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Books</p>
             </div>
           </Link>
           <Link href="#">
             <div className="relative text-center group">
-              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full bg-[#d6f8e5] opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
+              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full  opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
               <IoHardwareChip className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Electronics</p>
             </div>
           </Link>
           <Link href="#">
             <div className="relative text-center group">
-              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full bg-[#fff3d6] opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
+              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full  opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
               <PiPencilRulerFill className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Design</p>
             </div>
           </Link>
           <Link href="#">
             <div className="relative text-center group">
-              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full bg-[#e4d6ff] opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
+              <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
               <MdMiscellaneousServices className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Services</p>
             </div>
