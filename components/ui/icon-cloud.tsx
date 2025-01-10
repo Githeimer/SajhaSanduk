@@ -9,6 +9,7 @@ import {
   renderSimpleIcon,
   SimpleIcon,
 } from "react-icon-cloud";
+import Image from "next/image";
 
 export type DynamicCloudProps = {
   iconSlugs?: string[];
@@ -100,7 +101,7 @@ export default function IconCloud({
           imageArray.length > 0 &&
           imageArray.map((image, index) => (
             <a key={index} href="#" onClick={(e) => e.preventDefault()}>
-              <img height="42" width="42" alt="A globe" src={image} />
+              <Image height="42" width="42" alt="A globe" src={image} />
             </a>
           ))}
       </>

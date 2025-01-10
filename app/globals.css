@@ -68,7 +68,7 @@ body {
 
 .landing_container {
   width: 100%; /* Allow it to take full width */
-  max-width: 1300px; /* Restrict the maximum width */
+  max-width: 1200px; /* Restrict the maximum width */
   flex-grow: 0; /* Prevent flexbox stretching */
   flex-shrink: 0; /* Prevent shrinking */
   box-sizing: border-box; /* Ensure padding/border doesn't affect width */
