@@ -22,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 export function ProductsList() {
   const [products, setProducts] = useState([
@@ -64,9 +65,11 @@ export function ProductsList() {
               className="flex items-center justify-between space-x-4 rounded-lg border p-4"
             >
               <div className="flex items-center space-x-4">
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
+                  width={64}
+                  height={54}
                   className="h-16 w-16 rounded-md object-cover"
                 />
                 <div>

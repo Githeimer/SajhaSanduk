@@ -15,9 +15,11 @@ const Navbar = (props: Props) => {
     <div className='flex flex-row p-3 justify-between items-center relative landing_container font-[inter] '>
       {/* Logo and Title */}
       <div className='flex flex-row items-center '>
+        <Link href={"/"}>
         <span className='font-bold text-3xl'>
           <span className='text-[#2d20c0] '>Sajha</span> Sanduk
         </span>
+        </Link>
       </div>
 
       {/* Navbar Links (Desktop) */}

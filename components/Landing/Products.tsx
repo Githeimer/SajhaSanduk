@@ -14,7 +14,7 @@ const FeaturedProducts = [
         name: "Larry ",
         avatar: "https://ui.shadcn.com/avatars/04.png",
       },
-      description: "Random Ass product too plain dont buy jk rent rent rent",
+      description: "Random product too plain dont buy jk rent rent rent",
       listingType: "rent",
     },
     {
@@ -67,7 +67,7 @@ const Products = () => {
    </div>
     <div className='grid md:grid-cols-4 gap-10 p-5 md:p-1 '>
     {FeaturedProducts.map((ele,index)=>{
-        return <Link href={"#"} key={index}>
+        return <Link href={"/marketplace"} key={index}>
              <MarketCard
           name={ele.name}
           price={ele.price}

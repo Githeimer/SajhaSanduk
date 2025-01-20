@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [ '/profile', '/dashboard',], //these are protected routes
+  matcher: [ '/profile','/dashboard'], //these are protected routes
 };

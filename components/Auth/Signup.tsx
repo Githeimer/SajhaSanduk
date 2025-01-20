@@ -32,10 +32,63 @@ const SignupForm = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // Prevent non-numeric characters for the phone number
+    if (name === "phone" && !/^\d*$/.test(value)) {
+      return; // Only allow numbers
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
+
     if (name === "password") {
       updatePasswordStrength(value);
       setShowPasswordBar(value.length > 0);
+    }
+  };
+
+  const validateInputs = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Invalid email format.");
+      return false;
+    }
+
+    if (!phoneRegex.test(formData.phone) || formData.phone.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post("api/users/signup", formData);
+      if (response.data.success) {
+        toast.success("Signup successful!");
+        router.push("/login");
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          location: [27.6193, 85.5385],
+          password: "",
+        });
+        setShowPasswordBar(false);
+      } else {
+        setSignError(response.data.message || "An error occurred during signup.");
+      }
+    } catch (error: any) {
+      setSignError(error.response?.data?.message || "Unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,31 +144,6 @@ const SignupForm = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("api/users/signup", formData);
-      if (response.data.success) {
-        toast.success("Signup successful!");
-        router.push("/login");
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          location: [27.6193, 85.5385],
-          password: "",
-        });
-        setShowPasswordBar(false);
-      } else {
-        setSignError(response.data.message || "An error occurred during signup.");
-      }
-    } catch (error: any) {
-      setSignError(error.response?.data?.message || "Unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (Signerror) {
       toast.error(Signerror);
@@ -153,8 +181,10 @@ const SignupForm = () => {
         <Label htmlFor="phone">Phone</Label>
         <Input
           id="phone"
-          type="tel"
-          placeholder="123-456-7890"
+          type="text"
+          placeholder="9813704229"
+          maxLength={10}
+          minLength={10}
           name="phone"
           value={formData.phone}
           onChange={handleInputChange}
