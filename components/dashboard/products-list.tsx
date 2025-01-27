@@ -107,6 +107,9 @@ export function ProductsList() {
             </div>
           ))}
         </div>
+        <div className="mt-2">
+          <Button variant="default">List Product</Button>
+        </div>
       </CardContent>
     </Card>
   )
