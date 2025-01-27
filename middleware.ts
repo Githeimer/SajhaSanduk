@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
 
   // Define public and protected paths
   const isPublicPath =  path === '/login' || path === '/signup';
-  const isProtectedPath = path.startsWith('/profile') || path.startsWith('/dashboard') || path.startsWith('/marketplace');
+  const isProtectedPath = path.startsWith('/profile') || path.startsWith('/dashboard');
 
   // Redirect logged-in users away from public pages
   if (isPublicPath && token) {

@@ -62,13 +62,13 @@ const Products = () => {
   return (
     <div className='landing_container p-5 flex flex-col gap-5'> 
    <div className='flex flex-row justify-between items-center'>
-   <h1 className=' text-xl md:text-2xl font-inter  font-medium'>Featured Products</h1>
+   <h1 className=' text-xl   md:text-2xl font-inter  font-medium'>Featured Products</h1>
    <Link href={"marketplace"}> <Button>Go to Marketplace</Button></Link>
    </div>
     <div className='grid md:grid-cols-4 gap-10 p-5 md:p-1 '>
     {FeaturedProducts.map((ele,index)=>{
-        return <Link href={"/marketplace"} key={index}>
-             <MarketCard
+        return <MarketCard
+             key={index}
           name={ele.name}
           price={ele.price}
           rating={ele.rating}
@@ -78,7 +78,7 @@ const Products = () => {
           listedBy={ele.listedBy}
           listingType={ele.listingType}
         />
-        </Link>
+        
     })}
     </div>
     </div>

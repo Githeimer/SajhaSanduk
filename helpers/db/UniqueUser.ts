@@ -45,3 +45,10 @@ export default async function FindingUserByEmail(email: string) {
     };
   }
 }
+
+
+// ExtractProductsfromDB({data})
+//data-> "","electronics,books,tools and diy"
+//if(nothign selected "")
+// randomly highest rating products
+//else if(category)

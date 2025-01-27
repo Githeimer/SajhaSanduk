@@ -9,11 +9,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import Link from 'next/link'
 
 interface MarketplaceCardProps {
   name: string
   price: number
   rating: number
+  slug?:string
   image: string
   category: string
   description: string
@@ -21,7 +23,7 @@ interface MarketplaceCardProps {
     name: string
     avatar: string
   }
-  listingType: string
+  listingType: boolean
 }
 
 export default function MarketCard({ 
@@ -32,10 +34,12 @@ export default function MarketCard({
   category, 
   description, 
   listedBy, 
-  listingType 
+  listingType,
+  slug
 }: MarketplaceCardProps) {
   return (
     <Card className="w-full max-w-sm overflow-hidden">
+      <Link href={`/marketplace/${slug}`}>
       <div className="relative h-48">
         <Image
           src={image}
@@ -47,11 +51,11 @@ export default function MarketCard({
           {category}
         </Badge>
         <Badge className={`absolute top-2 right-2 ${
-          listingType === 'sale' 
+          listingType ===  false
             ? 'bg-emerald-500 text-white' 
             : 'bg-sky-500 text-white'
         }`}>
-          {listingType === 'sale' ? 'Sale' : 'Rent'}
+          {listingType === false ? 'Sale' : 'Rent'}
         </Badge>
       </div>
       <CardContent className="p-4">
@@ -59,7 +63,7 @@ export default function MarketCard({
         <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
         <div className="flex justify-between items-center mb-4">
           <span className="text-lg font-bold">
-            {listingType === 'sale' 
+            {listingType === false 
               ? `Rs.${price.toFixed(2)}` 
               : `Rs.${price.toFixed(2)}/day`
             }
@@ -88,6 +92,7 @@ export default function MarketCard({
           </div>
         </div>
       </CardContent>
+      </Link>
     </Card>
   )
 }
