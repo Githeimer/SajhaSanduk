@@ -1,4 +1,4 @@
-import supabase from "@/config/dbConfig";
+import {supabase} from "@/config/dbConfig";
 
 export default async function FindingUserByEmail(email: string) {
   try {
