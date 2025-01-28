@@ -27,6 +27,7 @@ import {
   ToastClose,
   ToastAction,
 } from "@/components/ui/toast"
+import uploadImages from "./image-upload"
 
 const formSchema = z.object({
   product_slug: z.string().min(2).max(50).nonempty(),
@@ -38,6 +39,7 @@ const formSchema = z.object({
   max_allowable_days: z.number().min(0).optional(),
   is_rented: z.boolean().default(false),
   category: z.string().min(2).nonempty(),
+  
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -64,6 +66,7 @@ export default function ListProductForm() {
       max_allowable_days: 0,
       is_rented: false,
       category: "",
+      // image:[]
     },
   })
 
@@ -206,7 +209,7 @@ export default function ListProductForm() {
               </FormItem>
             )}
           />
-
+          
           <FormField
             control={form.control}
             name="is_rentable"
@@ -222,6 +225,10 @@ export default function ListProductForm() {
               </FormItem>
             )}
           />
+          //image upload section
+           {/* <FormField
+            <uploadImages/>
+          /> */}
 
           {form.watch("is_rentable") && (
             <FormField
@@ -239,6 +246,7 @@ export default function ListProductForm() {
               )}
             />
           )}
+
 
           <Button type="submit" className="w-full bg-[#4338CA] hover:bg-[#3730A3]" disabled={isSubmitting}>
             {isSubmitting ? (
