@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { toast, Toaster } from "sonner";
 import axios from "axios";
+import { useUser } from "@/hooks/userHook";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,17 +14,22 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const {login}=useUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+
     try {
       setIsLoading(true);
       const response = await axios.post("/api/users/login", { email, password });
+      console.log(response.data);
 
       if (response.data.success) {
         toast.success("Login successful!");
+        login(response.data.data.profile);
         router.push("/marketplace");
+
       } else {
         setLoginError(response.data.error || "An error occurred during login.");
       }

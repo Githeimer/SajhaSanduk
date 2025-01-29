@@ -1,31 +1,32 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useContext } from "react";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useUser } from "@/hooks/userHook";
 
-import { Button } from '../ui/button';
-import Link from 'next/link';
+const Navbar = () => {
+  const { user, logout } = useUser();
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
-import { FaBars, FaTimes } from 'react-icons/fa'; 
-
-type Props = {};
-
-const Navbar = (props: Props) => {
-  const [menuOpen, setMenuOpen] = useState(false); 
+  if (user === undefined) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className='flex flex-row bg-white p-3 shadow-sm justify-between items-center sticky top-0 overflow-hidden z-[200] landing_container font-[inter] '>
+    <div className="flex flex-row bg-white p-3 shadow-sm justify-between items-center sticky top-0 overflow-hidden z-[200] landing_container font-[inter] ">
       {/* Logo and Title */}
-      <div className='flex flex-row items-center '>
+      <div className="flex flex-row items-center">
         <Link href={"/"}>
-        <span className='font-bold text-3xl'>
-          <span className='text-[#2d20c0] '>Sajha</span> Sanduk
-        </span>
+          <span className="font-bold text-3xl">
+            <span className="text-[#2d20c0] ">Sajha</span> Sanduk
+          </span>
         </Link>
       </div>
 
       {/* Navbar Links (Desktop) */}
-      <div className="hidden md:flex flex-row items-center  justify-center gap-3 font-bold cursor-pointer">
-        <ul className="flex flex-row items-center  gap-4">
-         
+      <div className="hidden md:flex flex-row items-center justify-center gap-3 font-bold cursor-pointer">
+        <ul className="flex flex-row items-center gap-4">
           <Link href={"/marketplace"}>Market</Link>
           <Link href={"/"}>About</Link>
           <Link href={"/"}>Team</Link>
@@ -41,16 +42,20 @@ const Navbar = (props: Props) => {
 
       {/* Sign Up and Login Buttons (Desktop) */}
       <div className="hidden md:flex flex-row items-center gap-1 text-lg">
-        <Link href="/login">
-          <Button >
-            Login
-          </Button>
-        </Link>
-        <Link href="/signup">
-          <Button  className='bg-blue-800 text-white' >
-            Sign Up
-          </Button>
-        </Link>
+        {user ? (
+          <>
+            <Button onClick={logout}>Logout</Button>
+          </>
+        ) : (
+          <>
+            <Link href="/login">
+              <Button>Login</Button>
+            </Link>
+            <Link href="/signup">
+              <Button className="bg-blue-800 text-white">Sign Up</Button>
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Mobile Menu Dropdown */}
@@ -65,16 +70,24 @@ const Navbar = (props: Props) => {
 
           {/* Mobile Sign Up and Login Buttons */}
           <div className="flex flex-col items-center gap-4 p-4">
-            <Link href="/login">
-              <Button className='bg-[#2d20c0] text-white hover:bg-[#493ee8] w-32'>
-                Login
+            {user ? (
+              <Button onClick={logout} className="bg-[#2d20c0] text-white hover:bg-[#493ee8] w-32">
+                Logout
               </Button>
-            </Link>
-            <Link href="/signup">
-              <Button variant={'outline'} className='border-2 outline-blue-800 border-blue-700 hover:bg-[#ededee] text-[#2d20c0] w-32'>
-                Sign Up
-              </Button>
-            </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button className="bg-[#2d20c0] text-white hover:bg-[#493ee8] w-32">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button variant={'outline'} className="border-2 outline-blue-800 border-blue-700 hover:bg-[#ededee] text-[#2d20c0] w-32">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

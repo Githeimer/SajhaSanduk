@@ -2,14 +2,12 @@ import supabase from "@/config/dbConfig";
 
 export default async function FindingUserByEmail(email: string) {
   try {
-    // Perform the query to Supabase
     const { data, error } = await supabase
       .from("user_info")
       .select("*")
       .eq("email", email)
       .single();
 
-    // Handle any errors that occur in the query
     if (error) {
       console.error("Supabase Error:", error.message);
       return {
@@ -19,7 +17,6 @@ export default async function FindingUserByEmail(email: string) {
       };
     }
 
-    // Handle case where no data is returned
     if (!data) {
       return {
         ok: false,
@@ -28,7 +25,6 @@ export default async function FindingUserByEmail(email: string) {
       };
     }
 
-    // Return the found data
     return {
       ok: true,
       message: "User found successfully.",
@@ -47,8 +43,3 @@ export default async function FindingUserByEmail(email: string) {
 }
 
 
-// ExtractProductsfromDB({data})
-//data-> "","electronics,books,tools and diy"
-//if(nothign selected "")
-// randomly highest rating products
-//else if(category)

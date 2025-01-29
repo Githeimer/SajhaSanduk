@@ -39,7 +39,6 @@ const Marketplace = () => {
 
       try {
         const response = await axios.get(`/api/marketplace?category=${category}`);
-        console.log(response.data);
         const data = await response.data;
 
         if (response.data.success) {
@@ -62,13 +61,10 @@ const Marketplace = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
 
-      {/* Loading Indicator */}
       {loading && <p>Loading products...</p>}
 
-      {/* Error Message */}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Product List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
         {products.map((product) => (
           
@@ -83,13 +79,11 @@ const Marketplace = () => {
             description={product.description}
             listedBy={{name:product.user_details[0].name, avatar:product.user_details[0].Image}}
             listingType={product.is_rentable}
-
         />
           
         ))}
       </div>
 
-      {/* Pagination */}
       <Pagination />
     </div>
   );

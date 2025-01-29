@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       message: "Login Successful",
       success: true,
       data: {
-        profile: tokenData,
+        profile: foundUser,
       },
     });
 

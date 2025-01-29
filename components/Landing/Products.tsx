@@ -15,7 +15,7 @@ const FeaturedProducts = [
         avatar: "https://ui.shadcn.com/avatars/04.png",
       },
       description: "Random product too plain dont buy jk rent rent rent",
-      listingType: "rent",
+      listingType: true,
     },
     {
       name: "Soldering Iron Set",
@@ -28,7 +28,7 @@ const FeaturedProducts = [
         avatar: "https://github.com/shadcn.png",
       },
       description: "Another random product, better suited for renting.",
-      listingType: "rent",
+      listingType: true,
     },
     {
       name: "3rd Sem Notes (CS)",
@@ -41,7 +41,7 @@ const FeaturedProducts = [
         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW4nZ4G82StJYNgPRfYDBKbXdo1q1jHZj-TA&s",
       },
       description: "Yet another rentable product with a good daily rate.",
-      listingType: "sale",
+      listingType: true,
     },
     {
       name: "EDRG Set",
@@ -54,7 +54,7 @@ const FeaturedProducts = [
         avatar: "https://ui.shadcn.com/avatars/03.png",
       },
       description: "A buyable product that is worth your money.",
-      listingType: "sale",
+      listingType: true,
     },
   ];
   
