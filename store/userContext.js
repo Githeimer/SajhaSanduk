@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import Cookies from "js-cookie"; //
+
+import cookie from "js-cookie";
 import DecodeTokenData from "@/helpers/DecodeTokenData";
 import axios from "axios";
 
@@ -13,23 +14,13 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const initializeUser = async () => {
       setLoading(true);
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const decodedData = await DecodeTokenData(token);
-          if (decodedData.success) {
-            const id = decodedData.data.id;
-            const userData = await axios.get(`/api/users?uid=${id}`);
-            if (userData.data.success) {
-              setUser(userData.data.data);
-            } else {
-              console.error("Error finding user:", userData.data.message);
-            }
-          }
-        } catch (error) {
-          console.error("Failed to initialize user:", error);
-        }
+
+      const decodedData = await axios.get("api/users/me");
+      console.log("This is Decoded Data:" + decodedData);
+      if (decodedData.statusText) {
+        setUser(decodedData.data);
       }
+
       setLoading(false);
     };
     initializeUser();
@@ -46,7 +37,7 @@ export const UserProvider = ({ children }) => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </UserContext.Provider>
   );
