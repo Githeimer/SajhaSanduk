@@ -1,15 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination } from "@/components/marketplace/pagination";
 import MarketCard from "@/components/ui/marketCard";
-import Navbar from "@/components/Landing/Navbar";
-import Logout from "@/components/Auth/Logout";
 
 const categories = ["Electronics", "Mechanical", "Books", "Tools and diy", "Music"];
 
