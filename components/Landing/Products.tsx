@@ -15,7 +15,7 @@ const FeaturedProducts = [
         avatar: "https://ui.shadcn.com/avatars/04.png",
       },
       description: "Random product too plain dont buy jk rent rent rent",
-      listingType: "rent",
+      listingType: true,
     },
     {
       name: "Soldering Iron Set",
@@ -28,7 +28,7 @@ const FeaturedProducts = [
         avatar: "https://github.com/shadcn.png",
       },
       description: "Another random product, better suited for renting.",
-      listingType: "rent",
+      listingType: true,
     },
     {
       name: "3rd Sem Notes (CS)",
@@ -41,7 +41,7 @@ const FeaturedProducts = [
         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW4nZ4G82StJYNgPRfYDBKbXdo1q1jHZj-TA&s",
       },
       description: "Yet another rentable product with a good daily rate.",
-      listingType: "sale",
+      listingType: true,
     },
     {
       name: "EDRG Set",
@@ -54,21 +54,21 @@ const FeaturedProducts = [
         avatar: "https://ui.shadcn.com/avatars/03.png",
       },
       description: "A buyable product that is worth your money.",
-      listingType: "sale",
+      listingType: true,
     },
   ];
   
 const Products = () => {
   return (
-    <div className='landing_container p-5 flex flex-col gap-5'> 
-   <div className='flex flex-row justify-between items-center'>
-   <h1 className=' text-xl md:text-2xl font-inter  font-medium'>Featured Products</h1>
-   <Link href={"marketplace"}> <Button>Go to Marketplace</Button></Link>
+    <div className='landing_container p-5 flex flex-col gap-5 items-center'> 
+   <div className='flex flex-row w-full items-center justify-around md:justify-between'>
+   <h1 className=' text-xl   md:text-2xl font-inter  font-medium'>Featured Products</h1>
+   <Link href={"marketplace"} scroll> <Button>Go to Marketplace</Button></Link>
    </div>
-    <div className='grid md:grid-cols-4 gap-10 p-5 md:p-1 '>
+    <div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-10 p-5 md:p-1 '>
     {FeaturedProducts.map((ele,index)=>{
-        return <Link href={"/marketplace"} key={index}>
-             <MarketCard
+        return <MarketCard
+             key={index}
           name={ele.name}
           price={ele.price}
           rating={ele.rating}
@@ -78,7 +78,7 @@ const Products = () => {
           listedBy={ele.listedBy}
           listingType={ele.listingType}
         />
-        </Link>
+        
     })}
     </div>
     </div>

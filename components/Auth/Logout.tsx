@@ -4,10 +4,12 @@ import { Button } from '../ui/button'
 import axios from 'axios'
 import { toast,Toaster } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@/hooks/userHook'
 
 
 const Logout = () => {
 const router=useRouter();
+const {logout}=useUser();
     const handleLogout=async()=>{
         try {
             const response:any= await axios.get("api/users/logout");
@@ -18,7 +20,8 @@ const router=useRouter();
               return;
             }
             toast.success("Logout Successful");
-            router.push("/login");
+            logout();
+            
             
         } catch (error:any) {
             toast.error("Error"+error.message)

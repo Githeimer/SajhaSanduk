@@ -16,7 +16,7 @@ import { v2 as cloudinary } from 'cloudinary';
                public_id: 'shoes',
            }
        )
-       .catch((error) => {
+       .catch((error:any) => {
            console.log(error);
        });
     

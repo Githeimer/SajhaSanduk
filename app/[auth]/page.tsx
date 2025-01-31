@@ -15,7 +15,7 @@ export default function Auth() {
   const auth:any = params?.auth || "login"; 
 
   const handleTabChange = (value: string) => {
-    router.push(`/${value}`); 
+    router.push(`/marketplace?category=${value}`); 
   };
 
   return (

@@ -6,7 +6,7 @@ import Tools from "./Tools";
 
 const Hero = () => {
   return (
-    <div className="relative flex items-center justify-center flex-col h-96 md:h-[29rem] px-4 bg-hero-pattern bg-center">
+    <div className="relative flex items-center justify-center flex-col h-96 md:h-[29rem] px-4 bg-hero-pattern bg-center mt-16">
       {/* Overlay to reduce the opacity of the background image */}
       <div className="absolute inset-0 bg-[#f4f6ff] opacity-70"></div>
 

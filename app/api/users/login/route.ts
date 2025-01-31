@@ -1,4 +1,4 @@
-import {supabase} from "@/config/dbConfig";
+import supabase from "@/config/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       message: "Login Successful",
       success: true,
       data: {
-        profile: tokenData,
+        profile: foundUser,
       },
     });
 
