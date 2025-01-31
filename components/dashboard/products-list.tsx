@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
+import Link from "next/link"
 
 export function ProductsList() {
   const [products, setProducts] = useState([
@@ -107,6 +108,9 @@ export function ProductsList() {
             </div>
           ))}
         </div>
+        <Link  href={"/list-product"}>
+          <Button variant="default" className="mt-2">List Product</Button>
+        </Link>
       </CardContent>
     </Card>
   )
