@@ -2,7 +2,7 @@ import { SiNextdotjs, SiTypescript, SiSupabase, SiCashapp,SiCloudinary } from "r
 
 export function ProjectOverview() {
   return (
-    <div className="bg-gray-100 p-8 rounded-md shadow-md">
+    <div className="bg-gray-100 p-8 rounded-md shadow-md" id="overview" >
       <div className="landing_container grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Section: Project Description */}
         <div>
@@ -49,7 +49,7 @@ export function ProjectOverview() {
 
               
             </div>
-            <div className="flex items-center bg-white shadow-md rounded-md p-4">
+            <div className="flex items-center bg-white shadow-md rounded-md p-4"  id="about">
               <SiCloudinary className="text-4xl text-blue-500 mr-4" />
               <span className="text-lg font-medium text-gray-700">Cloudinary</span>
             </div>

@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import  Logout  from "@/components/Auth/Logout";
 
-const categories = ["Electronics", "Mechanical", "Books", "Tools and diy", "Music"];
+const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music"];
 
 export default function Sidebar() {
   const [priceRange, setPriceRange] = useState([0, 1000]);
@@ -49,7 +49,7 @@ export default function Sidebar() {
         ))}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 z-10">
         <div className="flex items-center space-x-2">
           <Checkbox
             id="recommended"
@@ -62,7 +62,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <Logout />
+      {/* <Logout /> */}
     </aside>
   );
 }

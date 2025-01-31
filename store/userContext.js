@@ -16,9 +16,12 @@ export const UserProvider = ({ children }) => {
       setLoading(true);
 
       const decodedData = await axios.get("api/users/me");
+
       console.log("This is Decoded Data:" + decodedData);
       if (decodedData.statusText) {
         setUser(decodedData.data);
+      } else {
+        setUser(null);
       }
 
       setLoading(false);
@@ -33,8 +36,6 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
   };
-
-  if (loading) return <div>Loading...</div>;
 
   return (
     <UserContext.Provider value={{ user, login, logout, loading }}>

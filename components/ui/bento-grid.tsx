@@ -39,7 +39,7 @@ const bentoItems: BentoItem[] = [
 
 export function BentoGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gray-100">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gray-100" >
       {bentoItems.map((item, index) => (
         <div
           key={index}
@@ -49,13 +49,14 @@ export function BentoGrid() {
           )}
         >
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10 pointer-events-none"  />
           {/* Image */}
           <Image
             src={item.image}
             alt={item.title}
             fill
             className="object-cover w-full h-full"
+           
           />
           {/* Content */}
           <div className="absolute inset-0 flex flex-col justify-between p-4 z-20">
@@ -66,6 +67,7 @@ export function BentoGrid() {
           </div>
         </div>
       ))}
+   
     </div>
   );
 }

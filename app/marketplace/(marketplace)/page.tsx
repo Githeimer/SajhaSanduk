@@ -30,7 +30,7 @@ const Marketplace = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const category = searchParams.get("category") || "default"; // Default to "default" category
+  const category = searchParams.get("category") || "default"; 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,7 +47,7 @@ const Marketplace = () => {
           setError(data.message || "Failed to fetch products");
         }
       } catch (err: any) {
-        setError("Unexpected error occurred");
+        setError("Failed to Fetch Products");
         console.error(err);
       } finally {
         setLoading(false);
@@ -65,7 +65,7 @@ const Marketplace = () => {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {products.map((product) => (
           
             <MarketCard
@@ -84,7 +84,7 @@ const Marketplace = () => {
         ))}
       </div>
 
-      <Pagination />
+      
     </div>
   );
 };

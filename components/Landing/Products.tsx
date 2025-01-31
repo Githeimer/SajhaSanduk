@@ -60,12 +60,12 @@ const FeaturedProducts = [
   
 const Products = () => {
   return (
-    <div className='landing_container p-5 flex flex-col gap-5'> 
-   <div className='flex flex-row justify-between items-center'>
+    <div className='landing_container p-5 flex flex-col gap-5 items-center'> 
+   <div className='flex flex-row w-full items-center justify-around md:justify-between'>
    <h1 className=' text-xl   md:text-2xl font-inter  font-medium'>Featured Products</h1>
-   <Link href={"marketplace"}> <Button>Go to Marketplace</Button></Link>
+   <Link href={"marketplace"} scroll> <Button>Go to Marketplace</Button></Link>
    </div>
-    <div className='grid md:grid-cols-4 gap-10 p-5 md:p-1 '>
+    <div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-10 p-5 md:p-1 '>
     {FeaturedProducts.map((ele,index)=>{
         return <MarketCard
              key={index}

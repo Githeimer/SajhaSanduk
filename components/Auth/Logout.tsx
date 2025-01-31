@@ -21,7 +21,7 @@ const {logout}=useUser();
             }
             toast.success("Logout Successful");
             logout();
-            router.push("/login");
+            
             
         } catch (error:any) {
             toast.error("Error"+error.message)

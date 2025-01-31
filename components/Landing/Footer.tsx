@@ -6,7 +6,7 @@ import { FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#141414] text-white py-6">
+    <footer className="bg-[#141414] text-white py-6 px-9 w-full">
       <div className="container mx-auto flex justify-between items-center">
         {/* Left side: Project info */}
         <div>
