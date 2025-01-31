@@ -21,6 +21,8 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
           `/api/marketplace/product?product_slug=${resolvedParams.product_slug}`
         );
 
+        console.log(response);
+
         if (response.status === 200 && response.data.success) {
           setProductInfo(response.data.data.productDetail[0]);
           setUserInfo(response.data.data.listerDetail[0]);
@@ -28,7 +30,7 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
           setError(`Failed to fetch data for product: ${resolvedParams.product_slug}`);
         }
       } catch (error: any) {
-        // Handle 404 and other errors
+        
         if (error.response?.status === 404) {
           setError("Product not found (404).");
         } else {
@@ -53,7 +55,7 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
       <div className="error-container">
         <h1 className="text-red-500">{error}</h1>
         <p>
-          It seems we couldn’t find the product you were looking for. Please try
+          It seems we couldn't find the product you were looking for. Please try
           searching again in the marketplace.
         </p>
       </div>

@@ -1,229 +1,179 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { PlusCircle, Edit, User, Package, Settings, Menu } from "lucide-react"
-import  AddProductForm  from "@/components/dashboard/add-product-form"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
+import { Edit } from "lucide-react"
+import AddProductForm from "@/components/dashboard/add-product-form"
 import { useUser } from "@/hooks/userHook"
-import Logout from "@/components/Auth/Logout"
+import axios from "axios"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Link from "next/link"
 
-// Mock data for recent sales
-const recentSales = {
-  rented: [
-    { id: 1, product: "Product A", amount: 100, date: "2023-05-01", image: "/placeholder.svg" },
-    { id: 2, product: "Product B", amount: 200, date: "2023-05-02", image: "/placeholder.svg" },
-  ],
-  sold: [
-    { id: 3, product: "Product C", amount: 150, date: "2023-05-03", image: "/placeholder.svg" },
-    { id: 4, product: "Product D", amount: 300, date: "2023-05-04", image: "/placeholder.svg" },
-  ],
+// ... keep recentSales mock data
+
+interface Product {
+  id: number;
+  product_slug: string;
+  name: string;
+  photos: string[];
+  listed_by: number;
+  description: string;
+  rating: number;
+  amount: number;
+  is_rentable: boolean;
+  max_allowable_days: number | null;
+  is_rented: boolean;
+  Category: string;
+  user_details?: any;
 }
 
-// Mock data for products
-const products = [
-  { id: 1, name: "Product A", price: 100, stock: 50, image: "/placeholder.svg" },
-  { id: 2, name: "Product B", price: 200, stock: 30, image: "/placeholder.svg" },
-  { id: 3, name: "Product C", price: 150, stock: 40, image: "/placeholder.svg" },
-]
+type FilterType = 'all' | 'rentable' | 'sellable';
 
 export default function Dashboard() {
   const [showAddProduct, setShowAddProduct] = useState(false)
-  const {user,loading}=useUser();
-  const [userDetails,setUserDetails]=useState({
-    name:"User",
-    image:"https://avatar.iran.liara.run/public",
-    email:"example@gmail.com",
-    id:0
+  const { user, loading } = useUser()
+  const [products, setProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [filterType, setFilterType] = useState<FilterType>('all')
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [userDetails, setUserDetails] = useState({
+    name: "User",
+    image: "https://avatar.iran.liara.run/public",
+    email: "example@gmail.com",
+    id: 0
   })
 
-  
   useEffect(() => {
-    if (!loading && user?.data?.length > 0) {
-      const userData = user.data[0];
-      setUserDetails({
-        name: userData.name ,
-        email: userData.email ,
-        image: userData.Image || "https://avatar.iran.liara.run/public",
-        id: userData.id ,
-      });
-    }
-  }, [user, loading]);
+    if (!loading && user) {
+      const newUserDetails = {
+        name: user[0].name || "User",
+        email: user[0].email || "example@gmail.com",
+        image: user[0].image || "https://avatar.iran.liara.run/public",
+        id: user[0].id || 0,
+      }
+      setUserDetails(newUserDetails)
 
-  const Sidebar = () => (
-    <div className="flex flex-col justify-between h-full">
-    <div className="flex flex-col h-full">
-      <div className="mb-8 flex flex-col items-center">
-        <Avatar className="h-12 w-12 mb-2">
-          <AvatarImage src={userDetails.image} alt={userDetails.name} />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-        <h2 className="text-xl font-semibold">Welcome, {userDetails.name} </h2>
-      </div>
-      <hr className="p" />
-      <nav className="space-y-4">
-        <Button variant="ghost" className="w-full justify-start" onClick={() => setShowAddProduct(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Product
-        </Button>
-        <Button variant="ghost" className="w-full justify-start">
-          <User className="mr-2 h-4 w-4" /> Edit Profile
-        </Button>
-     
-      </nav>
-       
-    </div>
-   <div className="py-10 flex  justify-center items-center w-full">
-     <Logout/>
-   </div>
-    </div>
-  )
+      const fetchProductsFromDb = async () => {
+        try {
+          setIsLoadingProducts(true)
+          const response = await axios.get(`/api/vendor/fetchProduct?id=${newUserDetails.id}`)
+          const availableProducts = response.data.data.filter((product: Product) => !product.is_rented)
+          setProducts(availableProducts)
+          setFilteredProducts(availableProducts)
+        } catch (error: any) {
+          console.error('Error fetching products:', error)
+          setError(error.message)
+        } finally {
+          setIsLoadingProducts(false)
+        }
+      }
+
+      fetchProductsFromDb()
+    }
+  }, [user, loading])
+
+  useEffect(() => {
+    // Filter products based on selected filter type
+    const filterProducts = () => {
+      switch (filterType) {
+        case 'rentable':
+          setFilteredProducts(products.filter(product => product.is_rentable))
+          break
+        case 'sellable':
+          setFilteredProducts(products.filter(product => !product.is_rentable))
+          break
+        default:
+          setFilteredProducts(products)
+      }
+    }
+
+    filterProducts()
+  }, [filterType, products])
 
   return (
-    <div className="flex h-screen bg-gray-100">
-    
-      <div className="hidden md:block w-64 bg-gray-950 text-white p-6">
-        <Sidebar />
-      </div>
+    <div>
+      <h1 className="text-3xl font-bold mb-8 md:hidden">Dashboard</h1>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header for mobile */}
-        <header className="md:hidden bg-gray-900 text-white p-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold">Dashboard</h1>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-64 bg-gray-900 text-white p-6">
-              <Sidebar />
-            </SheetContent>
-          </Sheet>
-        </header>
-
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-auto p-6">
-          <h1 className="text-3xl font-bold mb-8 md:hidden">Dashboard</h1>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Recent Rented Items */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Rented Items</CardTitle>
-                <CardDescription>Overview of your recent rentals</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead className="hidden sm:table-cell">Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {recentSales.rented.map((sale) => (
-                      <TableRow key={sale.id}>
-                        <TableCell className="flex items-center">
-                          <img
-                            src={sale.image || "/placeholder.svg"}
-                            alt={sale.product}
-                            className="w-8 h-8 mr-2 rounded"
-                          />
-                          <span className="hidden sm:inline">{sale.product}</span>
-                        </TableCell>
-                        <TableCell>${sale.amount}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{sale.date}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-
-            {/* Recent Sold Items */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Sold Items</CardTitle>
-                <CardDescription>Overview of your recent sales</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead className="hidden sm:table-cell">Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {recentSales.sold.map((sale) => (
-                      <TableRow key={sale.id}>
-                        <TableCell className="flex items-center">
-                          <img
-                            src={sale.image || "/placeholder.svg"}
-                            alt={sale.product}
-                            className="w-8 h-8 mr-2 rounded"
-                          />
-                          <span className="hidden sm:inline">{sale.product}</span>
-                        </TableCell>
-                        <TableCell>${sale.amount}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{sale.date}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+      {/* Keep Recent Rented and Sold Items cards */}
+      
+      {/* Your Products */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Your Products</CardTitle>
+            <CardDescription>Manage and edit your product listings</CardDescription>
           </div>
-
-          {/* Your Products */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Products</CardTitle>
-              <CardDescription>Manage and edit your product listings</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead className="hidden sm:table-cell">Price</TableHead>
-                    <TableHead className="hidden sm:table-cell">Stock</TableHead>
-                    <TableHead>Action</TableHead>
+          <Select
+            value={filterType}
+            onValueChange={(value: FilterType) => setFilterType(value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter products" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Products</SelectItem>
+              <SelectItem value="rentable">Rentable Only</SelectItem>
+              <SelectItem value="sellable">Sellable Only</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardHeader>
+        <CardContent>
+          {isLoadingProducts ? (
+            <div className="text-center py-4">Loading products...</div>
+          ) : error ? (
+            <div className="text-center py-4 text-red-500">{error}</div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-4">No products found</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden sm:table-cell">Price</TableHead>
+                  <TableHead className="hidden sm:table-cell">Category</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell className="flex items-center">
+                      <img
+                        src={product.photos[0] || "/placeholder.svg"}
+                        alt={product.name}
+                        className="w-8 h-8 mr-2 rounded"
+                      />
+                      <span className="hidden sm:inline">{product.name}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        product.is_rentable 
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-green-100 text-green-700'
+                      }`}>
+                        {product.is_rentable ? 'Rentable' : 'Sellable'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">Rs.{product.amount}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{product.Category}</TableCell>
+                    <TableCell>
+                      <Link href={`/dashboard/product/${product.product_slug}`}>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Edit</span>
+                      </Button>
+                      </Link>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {products.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="flex items-center">
-                        <img
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          className="w-8 h-8 mr-2 rounded"
-                        />
-                        <span className="hidden sm:inline">{product.name}</span>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">${product.price}</TableCell>
-                      <TableCell className="hidden sm:table-cell">{product.stock}</TableCell>
-                      <TableCell>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Edit</span>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
       {showAddProduct && <AddProductForm onClose={() => setShowAddProduct(false)} />}
     </div>

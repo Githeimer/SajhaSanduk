@@ -15,7 +15,7 @@ export default function Auth() {
   const auth:any = params?.auth || "login"; 
 
   const handleTabChange = (value: string) => {
-    router.push(`/marketplace?category=${value}`); 
+    router.push(`/${value}`); 
   };
 
   return (
@@ -46,11 +46,7 @@ export default function Auth() {
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="w-full">
-              Sign in with Google
-            </Button>
-          </CardFooter>
+         
         </Card>
       </div>
     </div>
