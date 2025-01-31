@@ -20,6 +20,7 @@ const {logout}=useUser();
               return;
             }
             toast.success("Logout Successful");
+            router.refresh();
             logout();
             
             

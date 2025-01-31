@@ -53,7 +53,7 @@ const Marketplace = () => {
         setLoading(false);
       }
     };
-
+    window.scroll(0,0);
     fetchProducts();
   }, [category]);
 

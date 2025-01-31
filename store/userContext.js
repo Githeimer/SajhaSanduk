@@ -1,8 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-
-import cookie from "js-cookie";
-import DecodeTokenData from "@/helpers/DecodeTokenData";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const UserContext = createContext();
@@ -13,19 +10,26 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeUser = async () => {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const decodedData = await axios.get("api/users/me");
+        const response = await axios.get("/api/users/me");
 
-      console.log("This is Decoded Data:" + decodedData);
-      if (decodedData.statusText) {
-        setUser(decodedData.data);
-      } else {
+        console.log("Decoded Data:", response.data);
+
+        if (response.status === 200 && response.data.data) {
+          setUser(response.data.data);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("User fetching error:", error);
         setUser(null);
       }
 
       setLoading(false);
     };
+
     initializeUser();
   }, []);
 
