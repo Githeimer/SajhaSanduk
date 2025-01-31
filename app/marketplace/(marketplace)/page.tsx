@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import MarketCard from "@/components/ui/marketCard";
 import axios from "axios";
@@ -21,18 +21,13 @@ interface Product {
   user_details?: any;
 }
 
-const Marketplace = () => {
+const MarketplaceContent = () => {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category") || "default";
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [category, setCategory] = useState("default");
-
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const selectedCategory = searchParams.get("category") || "default";
-    setCategory(selectedCategory);
-  }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,6 +50,7 @@ const Marketplace = () => {
         setLoading(false);
       }
     };
+
     window.scroll(0, 0);
     fetchProducts();
   }, [category]);
@@ -83,6 +79,14 @@ const Marketplace = () => {
         ))}
       </div>
     </div>
+  );
+};
+
+const Marketplace = () => {
+  return (
+    <Suspense fallback={<p>Loading marketplace...</p>}>
+      <MarketplaceContent />
+    </Suspense>
   );
 };
 
