@@ -39,7 +39,7 @@ const bentoItems: BentoItem[] = [
 
 export function BentoGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gray-100" >
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gray-100 " id="about">
       {bentoItems.map((item, index) => (
         <div
           key={index}

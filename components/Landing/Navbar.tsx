@@ -24,12 +24,12 @@ const Navbar = () => {
           </div>
 
           {/* Navbar Links (Desktop) */}
-          <div className="hidden md:flex flex-row items-center justify-center gap-3 font-bold cursor-pointer">
+          <div className="hidden md:flex flex-row mx-auto items-center justify-center gap-3 font-bold cursor-pointer">
             <ul className="flex flex-row items-center gap-4">
               <Link href={"/marketplace"} className="hover:text-[#2d20c0] transition-colors">
                 Market
               </Link>
-              <Link href={"/"} className="hover:text-[#2d20c0] transition-colors">
+              <Link href={"/#about"} className="hover:text-[#2d20c0] transition-colors">
                 About
               </Link>
               <Link href={"/"} className="hover:text-[#2d20c0] transition-colors">
