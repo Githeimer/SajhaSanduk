@@ -1,8 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Star, ShoppingCart, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import axios from "axios"
+import Image from "next/image"
+
 
 interface ProductDetailsProps {
   product: {

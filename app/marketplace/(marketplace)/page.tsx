@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import MarketCard from "@/components/ui/marketCard"; // Import the MarketCard component
-import { Pagination } from "@/components/marketplace/pagination"; // Assuming you still want pagination
+import MarketCard from "@/components/ui/marketCard";
 import axios from "axios";
 
 interface Product {
@@ -24,13 +22,17 @@ interface Product {
 }
 
 const Marketplace = () => {
-  const searchParams = useSearchParams();
-  
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [category, setCategory] = useState("default");
 
-  const category = searchParams.get("category") || "default"; 
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const selectedCategory = searchParams.get("category") || "default";
+    setCategory(selectedCategory);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,7 +55,7 @@ const Marketplace = () => {
         setLoading(false);
       }
     };
-    window.scroll(0,0);
+    window.scroll(0, 0);
     fetchProducts();
   }, [category]);
 
@@ -62,13 +64,11 @@ const Marketplace = () => {
       <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
 
       {loading && <p>Loading products...</p>}
-
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {products.map((product) => (
-          
-            <MarketCard
+          <MarketCard
             key={product.id}
             name={product.name}
             price={product.amount}
@@ -77,14 +77,11 @@ const Marketplace = () => {
             image={product.photos[0]}
             category={product.Category}
             description={product.description}
-            listedBy={{name:product.user_details[0].name, avatar:product.user_details[0].Image}}
+            listedBy={{ name: product.user_details[0].name, avatar: product.user_details[0].Image }}
             listingType={product.is_rentable}
-        />
-          
+          />
         ))}
       </div>
-
-      
     </div>
   );
 };
