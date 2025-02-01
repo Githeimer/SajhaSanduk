@@ -12,7 +12,7 @@ const router=useRouter();
 const {logout}=useUser();
     const handleLogout=async()=>{
         try {
-            const response:any= await axios.get("api/users/logout");
+            const response:any= await axios.get("/api/users/logout");
             console.log(response);
             if(!response.data.success)
             {

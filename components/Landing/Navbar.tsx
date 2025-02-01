@@ -1,10 +1,19 @@
 "use client";
-import React, { useContext } from "react";
-import { Button } from "../ui/button";
+import React from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useUser } from "@/hooks/userHook";
 import Logout from "../Auth/Logout";
+import { Button } from "../ui/button";
+import { ShoppingCart, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { user, logout } = useUser();
@@ -45,10 +54,56 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Sign Up and Login Buttons (Desktop) */}
-          <div className="hidden md:flex flex-row items-center gap-1 text-lg">
+          {/* Desktop Cart and User Section */}
+          <div className="hidden md:flex flex-row items-center gap-4">
             {user ? (
-             <Logout/>
+              <>
+                {/* Cart Button */}
+                <Link href="/marketplace/cart">
+                  <Button variant="ghost" size="icon" className="relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                      0
+                    </span>
+                  </Button>
+                </Link>
+
+                {/* User Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center gap-0">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.image} />
+                        <AvatarFallback className="bg-[#2d20c0] text-white">
+                          {user?.name?.charAt(0) || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="flex flex-col space-y-1 p-2">
+                      <p className="font-medium">{user?.name}</p>
+                      <p className="text-sm text-gray-500 truncate">{user?.email}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <Link href="/dashboard">
+                      <DropdownMenuItem className="cursor-pointer">
+                        Dashboard
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/profile">
+                      <DropdownMenuItem className="cursor-pointer">
+                        Profile
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-red-600 cursor-pointer">
+                      <Logout/>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <>
                 <Link href="/login">
@@ -69,21 +124,31 @@ const Navbar = () => {
           {menuOpen && (
             <div className="absolute top-[60px] left-0 w-full backdrop-blur-3xl bg-white/90 shadow-lg border-t border-white/20 md:hidden">
               <ul className="flex flex-col items-center gap-4 text-lg font-medium p-4">
-              <Link href={"/marketplace"}>
-              <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
-                  Market
-                </li></Link>
-               <Link href={"/#about"}>
-               <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
-                  About
-                </li></Link>
+                <Link href={"/marketplace"}>
+                  <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
+                    Market
+                  </li>
+                </Link>
+                <Link href={"/#about"}>
+                  <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
+                    About
+                  </li>
+                </Link>
                 <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
                   Team
                 </li>
-              <Link href={"https://github.com/githeimer/sajhasanduk"}>
-              <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
-                  Github
-                </li></Link>
+                <Link href={"/dashboard"}>
+                  <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
+                    Dashboard
+                  </li>
+                </Link>
+                {user && (
+                  <Link href="/marketplace/cart">
+                    <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
+                      Cart
+                    </li>
+                  </Link>
+                )}
               </ul>
 
               {/* Mobile Sign Up and Login Buttons */}
@@ -92,7 +157,7 @@ const Navbar = () => {
                   <Button
                     variant={"destructive"}
                     onClick={logout}
-                    className=" w-32  transition-all"
+                    className="w-32 transition-all"
                   >
                     Logout
                   </Button>

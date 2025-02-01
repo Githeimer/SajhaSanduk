@@ -126,7 +126,7 @@ export default function Dashboard() {
           ) : error ? (
             <div className="text-center py-4 text-red-500">{error}</div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-4">No products found</div>
+            <div className="text-center py-4 flex flex-col items-center gap-4"><span>No products found</span><Link href={"/dashboard/addproduct"}><Button className="w-auto p-4">List your Product</Button></Link></div>
           ) : (
             <Table>
               <TableHeader>

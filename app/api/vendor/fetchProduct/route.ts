@@ -1,4 +1,4 @@
-import { FetchProductsById } from "@/helpers/db/ProductListed";
+import { FetchProductsById } from "@/helpers/db/vendor/ProductListed";
 import {NextRequest, NextResponse } from "next/server";
 
 interface ProductsData {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         )
       }
        const productData:ProductsData=await FetchProductsById(Number(user_id))
-      console.log(productData);
+      
        if (!productData.success) {
         return NextResponse.json(
           { success: false, message: productData.message, error: productData.error },

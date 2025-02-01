@@ -4,6 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import MarketCard from "@/components/ui/marketCard";
 import axios from "axios";
+import {Loader2} from "lucide-react"
 
 interface Product {
   id: number;
@@ -59,7 +60,7 @@ const MarketplaceContent = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
 
-      {loading && <p>Loading products...</p>}
+      {loading && <div><Loader2></Loader2></div>}
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">

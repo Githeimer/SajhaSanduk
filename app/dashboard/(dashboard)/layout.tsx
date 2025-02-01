@@ -57,7 +57,7 @@ export default function DashboardLayout({ children, onAddProduct }: LayoutProps)
           </Button>
           </Link>
           
-          <Link href={"/dashboard"}>
+          <Link href={`/dashboard/profile`}>
           <Button variant="ghost" className="w-full justify-start" onClick={onAddProduct}>
             <User className="mr-2 h-4 w-4" /> Profile
           </Button>
@@ -77,7 +77,7 @@ export default function DashboardLayout({ children, onAddProduct }: LayoutProps)
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="md:hidden bg-gray-900 text-white p-4 flex items-center justify-between">
+        <header className="md:hidden bg-gray-950 text-white p-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Dashboard</h1>
           <Sheet>
             <SheetTrigger asChild>
@@ -85,7 +85,7 @@ export default function DashboardLayout({ children, onAddProduct }: LayoutProps)
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-64 bg-gray-900 text-white p-6">
+            <SheetContent side="left" className="w-64 bg-gray-950 text-white p-6">
               <Sidebar />
             </SheetContent>
           </Sheet>
