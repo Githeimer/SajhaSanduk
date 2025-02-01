@@ -1,17 +1,15 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Edit } from "lucide-react"
-import AddProductForm from "@/components/dashboard/add-product-form"
-import { useUser } from "@/hooks/userHook"
-import axios from "axios"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import Link from "next/link"
-
-// ... keep recentSales mock data
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import AddProductForm from "@/components/dashboard/add-product-form";
+import { useUser } from "@/hooks/userHook";
+import axios from "axios";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -32,84 +30,44 @@ interface Product {
 type FilterType = 'all' | 'rentable' | 'sellable';
 
 export default function Dashboard() {
-  const [showAddProduct, setShowAddProduct] = useState(false)
-  const { user, loading } = useUser()
-  const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [filterType, setFilterType] = useState<FilterType>('all')
-  const [isLoadingProducts, setIsLoadingProducts] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [userDetails, setUserDetails] = useState({
-    name: "User",
-    image: "https://avatar.iran.liara.run/public",
-    email: "example@gmail.com",
-    id: 0
-  })
+  const [showAddProduct, setShowAddProduct] = useState(false);
+  const { user, loading } = useUser();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [filterType, setFilterType] = useState<FilterType>('all');
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user) {
-      const newUserDetails = {
-        name: user[0].name || "User",
-        email: user[0].email || "example@gmail.com",
-        image: user[0].image || "https://avatar.iran.liara.run/public",
-        id: user[0].id || 0,
-      }
-      setUserDetails(newUserDetails)
-
-      const fetchProductsFromDb = async () => {
+      const fetchProducts = async () => {
         try {
-          setIsLoadingProducts(true)
-          const response = await axios.get(`/api/vendor/fetchProduct?id=${newUserDetails.id}`)
-          const availableProducts = response.data.data.filter((product: Product) => !product.is_rented)
-          setProducts(availableProducts)
-          setFilteredProducts(availableProducts)
+          setIsLoadingProducts(true);
+          const response = await axios.get(`/api/vendor/fetchProduct?id=${user.id}`);
+          const availableProducts = response.data.data.filter((product: Product) => !product.is_rented);
+          setProducts(availableProducts);
+          setFilteredProducts(availableProducts);
         } catch (error: any) {
-          console.error('Error fetching products:', error)
-          setError(error.message)
+          console.error("Error fetching products:", error);
+          setError(error.message);
         } finally {
-          setIsLoadingProducts(false)
+          setIsLoadingProducts(false);
         }
-      }
-
-      fetchProductsFromDb()
+      };
+      fetchProducts();
     }
-  }, [user, loading])
-
-  useEffect(() => {
-    // Filter products based on selected filter type
-    const filterProducts = () => {
-      switch (filterType) {
-        case 'rentable':
-          setFilteredProducts(products.filter(product => product.is_rentable))
-          break
-        case 'sellable':
-          setFilteredProducts(products.filter(product => !product.is_rentable))
-          break
-        default:
-          setFilteredProducts(products)
-      }
-    }
-
-    filterProducts()
-  }, [filterType, products])
+  }, [user, loading]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8 md:hidden">Dashboard</h1>
-
-      {/* Keep Recent Rented and Sold Items cards */}
-      
-      {/* Your Products */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Your Products</CardTitle>
             <CardDescription>Manage and edit your product listings</CardDescription>
           </div>
-          <Select
-            value={filterType}
-            onValueChange={(value: FilterType) => setFilterType(value)}
-          >
+          <Select value={filterType} onValueChange={(value: FilterType) => setFilterType(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter products" />
             </SelectTrigger>
@@ -126,7 +84,12 @@ export default function Dashboard() {
           ) : error ? (
             <div className="text-center py-4 text-red-500">{error}</div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-4 flex flex-col items-center gap-4"><span>No products found</span><Link href={"/dashboard/addproduct"}><Button className="w-auto p-4">List your Product</Button></Link></div>
+            <div className="text-center py-4 flex flex-col items-center gap-4">
+              <span>No products found</span>
+              <Link href="/dashboard/addproduct">
+                <Button className="w-auto p-4">List your Product</Button>
+              </Link>
+            </div>
           ) : (
             <Table>
               <TableHeader>
@@ -150,21 +113,21 @@ export default function Dashboard() {
                       <span className="hidden sm:inline">{product.name}</span>
                     </TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        product.is_rentable 
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-green-100 text-green-700'
-                      }`}>
-                        {product.is_rentable ? 'Rentable' : 'Sellable'}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          product.is_rentable ? "bg-blue-100 text-blue-700" : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {product.is_rentable ? "Rentable" : "Sellable"}
                       </span>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">Rs.{product.amount}</TableCell>
                     <TableCell className="hidden sm:table-cell">{product.Category}</TableCell>
                     <TableCell>
                       <Link href={`/dashboard/product/${product.product_slug}`}>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Edit</span>
-                      </Button>
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Edit</span>
+                        </Button>
                       </Link>
                     </TableCell>
                   </TableRow>
@@ -177,5 +140,5 @@ export default function Dashboard() {
 
       {showAddProduct && <AddProductForm onClose={() => setShowAddProduct(false)} />}
     </div>
-  )
+  );
 }

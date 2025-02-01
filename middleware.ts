@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const token = request.cookies.get('token')?.value || '';
+  const token =request.cookies.get('token')?.value || '';
 
   // Define public and protected paths
   const isPublicPath =  path === '/login' || path === '/signup';
@@ -22,5 +22,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile', '/dashboard/:path*',  '/marketplace', '/', '/login', '/signup'], 
+  matcher: ['/profile', '/dashboard', '/dashboard/:path*', '/marketplace', '/', '/login', '/signup'],
 };

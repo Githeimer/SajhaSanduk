@@ -18,7 +18,10 @@ export const UserProvider = ({ children }) => {
         console.log("Decoded Data:", response.data);
 
         if (response.status === 200 && response.data.data) {
-          setUser(response.data.data);
+          const userData = Array.isArray(response.data.data)
+            ? response.data.data[0]
+            : response.data.data;
+          setUser(userData);
         } else {
           setUser(null);
         }
