@@ -16,13 +16,13 @@ export default function Footer() {
 
         {/* Right side: Links */}
         <div className="flex flex-col items-center justify-center text-left lg:flex-row ">
-          <Link href="/" passHref>
+          <Link href="/" >
             <Button variant="link" className=" text-white ">Home</Button>
           </Link>
-          <Link href="/dashboard" passHref>
+          <Link href="/dashboard/" >
             <Button variant="link" className=" text-white ">Dashboard</Button>
           </Link>
-          <Link href="/marketplace" passHref>
+          <Link href="/marketplace">
             <Button variant="link" className="text-white ">Marketplace</Button>
           </Link>
         </div>
