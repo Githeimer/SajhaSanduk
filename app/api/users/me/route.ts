@@ -25,3 +25,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: "Invalid Token", data: null }, { status: 401 });
   }
 }
+
+export async function PATCH(request:NextRequest)
+{
+  
+}
