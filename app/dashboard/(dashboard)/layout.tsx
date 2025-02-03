@@ -11,10 +11,9 @@ import Link from "next/link";
 
 interface LayoutProps {
   children: ReactNode;
-  onAddProduct: () => void;
 }
 
-export default function DashboardLayout({ children, onAddProduct }: LayoutProps) {
+export default function DashboardLayout({ children }: LayoutProps) {
   const { user, loading } = useUser();
   
   if (loading) {
