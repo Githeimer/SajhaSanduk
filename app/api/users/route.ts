@@ -1,16 +1,16 @@
 import { NextRequest,NextResponse } from "next/server";
 import UserDetailById from "@/helpers/db/UserDetailsById";
+import { updateUserProfile } from "@/helpers/db/EditUserProfile";
 
 export async function GET(request:NextRequest)
 {
     try {
         const user_id:any = request.nextUrl.searchParams.get("uid");
         console.log("received User ID:",user_id);
-        console.log("type of id:",isNaN(user_id));
 
         const response:any=await UserDetailById(user_id);
-
-        if(!response.data.success)
+        
+        if(!response.success)
         {
             return NextResponse.json({
                 success:false,
@@ -21,7 +21,7 @@ export async function GET(request:NextRequest)
         return NextResponse.json({
             success:true,
             message:"User Found",
-            data:response.data.data
+            data:response.data[0]
         })
 
     } catch (error:any) {
@@ -30,5 +30,30 @@ export async function GET(request:NextRequest)
           { message: "An unexpected error occurred.", error: error.message || "Unknown error", success: false },
           { status: 500 }
         );
+    }
+}
+
+export async function PATCH(request:NextRequest)
+{
+    try {
+        const user_id:any = request.nextUrl.searchParams.get("uid");
+        const data=await request.json();
+
+        console.log("received data",data);
+        console.log("user id",user_id);
+
+        const response=await updateUserProfile(user_id,data);
+
+      
+        return NextResponse.json(
+            { error: 'Data receieved' ,user_info:response.update_user_info,sucess:response.success},
+            { status: 200 }
+          );
+    } catch (error) {
+           console.error('Profile update error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
     }
 }
