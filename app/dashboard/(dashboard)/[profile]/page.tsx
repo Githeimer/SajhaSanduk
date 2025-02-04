@@ -5,20 +5,18 @@ import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit2, Save, X, MapPin } from 'lucide-react';
+import { Edit2, MapPin, Save, X } from 'lucide-react';
 import { toast, Toaster } from "sonner";
-import { useRouter } from 'next/navigation';
 import { useUser } from '@/hooks/userHook';
-
-const LocationMap = dynamic(() => import("@/components/Auth/LocationMap"), { ssr: false });
+import ImageUpload from '@/components/cloudinary/ImageUpload';
+import LocationMap from '@/components/Auth/LocationMap';
 
 const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
-  const router=useRouter();
-  const {setUser}=useUser();
-  
+  const { setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
+  
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -26,6 +24,7 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
     Image: '',
     location: [27.6193, 85.5385] as [number, number],
   });
+
   const [tempUserData, setTempUserData] = useState({ ...userData });
 
   useEffect(() => {
@@ -35,6 +34,7 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
         const resolvedParams = await params;
         const response = await axios.get(`/api/users?uid=${resolvedParams.profile}`);
         const user = response.data.data;
+        
         const userDataToSet = {
           name: user.name,
           email: user.email,
@@ -42,6 +42,7 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
           Image: user.Image,
           location: user.location || [27.6193, 85.5385], 
         };
+
         setUserData(userDataToSet);
         setTempUserData(userDataToSet);
       } catch (error) {
@@ -55,17 +56,6 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
     fetchUserDetail();
   }, [params]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setTempUserData({ ...userData });
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setTempUserData({ ...userData });
-    setIsMapVisible(false);
-  };
-
   const handleSave = async () => {
     try {
       setLoading(true);
@@ -75,21 +65,20 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
         name: tempUserData.name,
         phonenumber: tempUserData.phonenumber,
         Image: tempUserData.Image,
-        location: tempUserData.location,
+        location:tempUserData.location
       };
 
-     const updatedResponse= await axios.patch(`/api/users?uid=${resolvedParams.profile}`, dataToUpdate);
+      console.log(dataToUpdate);
 
-     if(updatedResponse.data.success)
-     {
-     setUser(updatedResponse.data.user_info);
-     setUserData({ ...tempUserData });
-     setIsEditing(false);
-     setIsMapVisible(false);
-     }
-     
-     window.location.reload();
-     
+      const updatedResponse = await axios.patch(`/api/users?uid=${resolvedParams.profile}`, dataToUpdate);
+
+      if(updatedResponse.data.success) {
+        setUser(updatedResponse.data.user_info);
+        setUserData({ ...tempUserData });
+        setIsEditing(false);
+      }
+
+      window.location.reload();
       
     } catch (error) {
       console.error('Error updating user data:', error);
@@ -110,28 +99,6 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
     setIsMapVisible(prev => !prev);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-        
-        // You'll need to implement this endpoint
-        const response = await axios.post('/api/upload-image', formData);
-        setTempUserData({ ...tempUserData, Image: response.data.imageUrl });
-        toast.success('Image uploaded successfully');
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        toast.error('Failed to upload image');
-      }
-    }
-  };
-
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
-
   return (
     <div className="max-w-2xl mx-auto p-4">
       <Toaster />
@@ -140,15 +107,12 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
           <CardTitle className="flex justify-between items-center">
             Profile
             {!isEditing ? (
-              <Button onClick={handleEdit} variant="outline" size="icon">
+              <Button onClick={() => setIsEditing(true)} variant="outline" size="icon">
                 <Edit2 className="h-4 w-4" />
               </Button>
             ) : (
               <div className="flex gap-2">
-                <Button onClick={handleSave} variant="outline" size="icon">
-                  <Save className="h-4 w-4" />
-                </Button>
-                <Button onClick={handleCancel} variant="outline" size="icon">
+                <Button onClick={() => setIsEditing(false)} variant="outline" size="icon">
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -157,54 +121,49 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-center mb-6">
-            <div className="relative">
-              <img
-                src={tempUserData.Image || "/api/placeholder/150/150"}
-                alt="Profile"
-                className="rounded-full w-32 h-32 object-cover"
-              />
-              {isEditing && (
-                <div className="absolute bottom-0 right-0">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label htmlFor="image-upload">
-                    <Button variant="outline" size="sm" className="cursor-pointer">
-                      Change Photo
-                    </Button>
-                  </label>
-                </div>
-              )}
-            </div>
+            <img
+              src={tempUserData.Image || "/api/placeholder/150/150"}
+              alt="Profile"
+              className="rounded-full w-32 h-32 object-cover"
+            />
+            {isEditing && (
+              <ImageUpload onUploadComplete={(url) => setTempUserData({ ...tempUserData, Image: url })} />
+            )}
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Name</label>
+          {/* Name Input */}
+          <div>
+            <label className="block text-sm font-medium">Name</label>
             <Input
+              type="text"
               value={tempUserData.name}
               onChange={(e) => setTempUserData({ ...tempUserData, name: e.target.value })}
               disabled={!isEditing}
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Email</label>
-            <Input value={userData.email} disabled />
+          {/* Email Input (Read-Only) */}
+          <div>
+            <label className="block text-sm font-medium">Email</label>
+            <Input
+              type="email"
+              value={tempUserData.email}
+              disabled
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Phone Number</label>
+          {/* Phone Number Input */}
+          <div>
+            <label className="block text-sm font-medium">Phone Number</label>
             <Input
+              type="text"
               value={tempUserData.phonenumber}
               onChange={(e) => setTempUserData({ ...tempUserData, phonenumber: e.target.value })}
               disabled={!isEditing}
             />
           </div>
 
+          {/* Location Input (Read-Only for Now) */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Location</label>
             {isEditing && (
@@ -227,6 +186,13 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
               </div>
             )}
           </div>
+    
+
+          {isEditing && (
+            <Button onClick={handleSave} size="icon" className='w-auto bg-green-500 p-3 hover:bg-green-400'>
+              Save Changes <Save />
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>

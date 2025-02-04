@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useUser } from "@/hooks/userHook";
@@ -16,8 +16,17 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
-  const { user, logout } = useUser();
+  const { user, logout,loading } = useUser();
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="fixed top-0 w-full z-[200]">
@@ -73,7 +82,7 @@ const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-0">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.image} />
+                        <AvatarImage src={user?.Image} />
                         <AvatarFallback className="bg-[#2d20c0] text-white">
                           {user?.name?.charAt(0) || 'U'}
                         </AvatarFallback>
@@ -92,7 +101,7 @@ const Navbar = () => {
                         Dashboard
                       </DropdownMenuItem>
                     </Link>
-                    <Link href="/profile">
+                    <Link href={`/dashboard/${user?.id}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         Profile
                       </DropdownMenuItem>

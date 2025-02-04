@@ -67,7 +67,7 @@ function Sidebar({ user }: { user: any }) {
       <div className="flex flex-col h-full">
         <div className="mb-8 flex flex-col items-center">
           <Avatar className="h-12 w-12 mb-2">
-            <AvatarImage src={user.image || "https://avatar.iran.liara.run/public"} alt={user.name} />
+            <AvatarImage src={user.Image || "https://avatar.iran.liara.run/public"} alt={user.name} className="object-cover"/>
             <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <h2 className="text-xl font-semibold">Welcome, {user.name}</h2>

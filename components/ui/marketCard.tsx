@@ -76,7 +76,7 @@ export default function MarketCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Avatar className="w-6 h-6">
-              <AvatarImage src={listedBy.avatar} alt={listedBy.name} />
+              <AvatarImage src={listedBy.avatar} alt={listedBy.name} className='object-cover' />
               <AvatarFallback>{listedBy.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <TooltipProvider>
