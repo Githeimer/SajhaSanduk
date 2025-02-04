@@ -1,13 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRouter, useSearchParams } from "next/navigation";
-import Logout from "@/components/Auth/Logout";
 
 const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music", "Others"];
 
-export default function Sidebar() {
+ function SidebarComponent() {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [recommended, setRecommended] = useState(false);
@@ -89,4 +88,13 @@ export default function Sidebar() {
       </div>
     </aside>
   );
+}
+
+export default function Sidebar()
+{
+  return(
+    <Suspense fallback={<>Loading...</>}>
+      <SidebarComponent></SidebarComponent>
+    </Suspense>
+  )
 }
