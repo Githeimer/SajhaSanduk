@@ -44,7 +44,7 @@ export async function PATCH(request:NextRequest)
 
       
         return NextResponse.json(
-            { error: 'Data receieved' ,user_info:response.update_user_info,sucess:response.success},
+            { error: 'Data receieved' ,user_info:response.update_user_info,success:response.success},
             { status: 200 }
           );
     } catch (error) {

@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { PlusCircle, User, Menu, Home } from "lucide-react";
+import { PlusCircle, User, Menu, Home, ShoppingBag } from "lucide-react";
 import { useUser } from "@/hooks/userHook";
 import Logout from "@/components/Auth/Logout";
 import Link from "next/link";
@@ -40,7 +40,8 @@ export default function DashboardLayout({ children }: LayoutProps) {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="md:hidden bg-gray-950 text-white p-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold">Dashboard</h1>
+       <Link href={"/"}> <p className="text-3xl font-[inter] font-semibold">Sajha <span className="text-[#493be7]">Sanduk</span></p></Link>
+
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -87,6 +88,11 @@ function Sidebar({ user }: { user: any }) {
           <Link href={`/dashboard/${user.id}`}>
             <Button variant="ghost" className="w-full justify-start">
               <User className="mr-2 h-4 w-4" /> Profile
+            </Button>
+          </Link>
+          <Link href={`/marketplace`}>
+            <Button variant="ghost" className="w-full justify-start">
+              <ShoppingBag className="mr-2 h-4 w-4" /> Marketplace
             </Button>
           </Link>
         </nav>

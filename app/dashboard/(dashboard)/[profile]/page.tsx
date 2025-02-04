@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,37 +56,38 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
   }, [params]);
 
   const handleSave = async () => {
+    // Validate name
+    if (!tempUserData.name || tempUserData.name.trim() === '') {
+      toast.error("Name is required");
+      return;
+    }
+
+    const cleanedPhoneNumber = tempUserData.phonenumber.replace(/\D/g, '');
+    if (cleanedPhoneNumber.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits");
+      return;
+    }
+
     try {
       setLoading(true);
       const resolvedParams = await params;
       
       const dataToUpdate = {
-        name: tempUserData.name,
-        phonenumber: tempUserData.phonenumber,
+        name: tempUserData.name.trim(),
+        phonenumber: cleanedPhoneNumber,
         Image: tempUserData.Image,
-        location:tempUserData.location
+        location: tempUserData.location
       };
 
-     if(dataToUpdate.name="")
-     {
-      toast.error("Name Missing")
-      return;
-     }
-     else if(dataToUpdate.phonenumber.length>=10)
-     {
-      toast.error("Phone Number greater than 10 digits")
-      return;
-     }
-
       const updatedResponse = await axios.patch(`/api/users?uid=${resolvedParams.profile}`, dataToUpdate);
-
+      console.log(updatedResponse);
       if(updatedResponse.data.success) {
         setUser(updatedResponse.data.user_info);
         setUserData({ ...tempUserData });
         setIsEditing(false);
+        toast.success('Profile updated successfully');
+        window.location.reload();
       }
-
-      window.location.reload();
       
     } catch (error) {
       console.error('Error updating user data:', error);
@@ -140,7 +140,6 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
             )}
           </div>
 
-          {/* Name Input */}
           <div>
             <label className="block text-sm font-medium">Name</label>
             <Input
@@ -151,7 +150,6 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
             />
           </div>
 
-          {/* Email Input (Read-Only) */}
           <div>
             <label className="block text-sm font-medium">Email</label>
             <Input
@@ -161,7 +159,6 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
             />
           </div>
 
-          {/* Phone Number Input */}
           <div>
             <label className="block text-sm font-medium">Phone Number</label>
             <Input
@@ -169,10 +166,10 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
               value={tempUserData.phonenumber}
               onChange={(e) => setTempUserData({ ...tempUserData, phonenumber: e.target.value })}
               disabled={!isEditing}
+              placeholder="10-digit phone number"
             />
           </div>
 
-          {/* Location Input (Read-Only for Now) */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Location</label>
             {isEditing && (
@@ -191,14 +188,18 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
             {!isEditing && (
               <div className="text-sm text-gray-600 flex flex-col gap-3">
                 Latitude: {userData.location[0]}, Longitude: {userData.location[1]}
-              <span className='text-gray-300'>Click Edit Button for preview</span>
+                <span className='text-gray-300'>Click Edit Button for preview</span>
               </div>
             )}
           </div>
     
-
           {isEditing && (
-            <Button onClick={handleSave} size="icon" className='w-auto bg-green-500 p-3 hover:bg-green-400'>
+            <Button 
+              onClick={handleSave} 
+              size="icon" 
+              className='w-auto bg-green-500 p-3 hover:bg-green-400'
+              disabled={loading}
+            >
               Save Changes <Save />
             </Button>
           )}

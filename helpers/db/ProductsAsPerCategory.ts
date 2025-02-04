@@ -24,7 +24,7 @@ interface ProductsResponse {
   error?: any;
 }
 
-const categories = ["Electronics", "Mechanical", "Books", "Tools and diy", "Music"];
+const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music","Others"];
 
 async function fetchUserDetailsForProducts(products: ProductDetail[]): Promise<ProductDetail[]> {
   const userDetailPromises = products.map(async (product) => {
@@ -49,7 +49,6 @@ export default async function ExtractProductsfromDB(category: string): Promise<P
         const { data, error } = await supabase
           .from("product_detail")
           .select("*")
-          .gt("rating", 0)
           .eq("Category", cat)
           .limit(6);
         if (error) {
