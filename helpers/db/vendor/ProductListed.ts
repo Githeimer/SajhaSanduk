@@ -5,7 +5,6 @@ import supabase from "@/config/dbConfig";
   {
     try {
         const {data,error}=await supabase.from("product_detail").select("*").eq("listed_by",user_id);
-        console.log(data);
         
         if(error)
         {

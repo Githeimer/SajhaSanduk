@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Trash2, UploadCloud } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import axios from "axios";
 import React from "react";
 import { useUser } from "@/hooks/userHook";
 import { useRouter } from "next/navigation";
+import MultiImageUpload from "@/components/cloudinary/MultipleImageUpload";
+import {toast} from "sonner"
 
 interface ProductData {
     id: number;
@@ -35,7 +37,7 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { product_slug } = await params;
+                const {product_slug}=await params;
                 const response = await axios.get(`/api/marketplace/product?product_slug=${product_slug}`);
                 const data = response.data;
 
@@ -67,7 +69,14 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setEditedProduct((prev) => prev ? { ...prev, [name]: value } : null);
+        setEditedProduct((prev) => 
+            prev ? { 
+                ...prev, 
+                [name]: name === "amount" || name === "max_allowable_days" 
+                    ? parseFloat(value) 
+                    : value 
+            } : null
+        );
     };
 
     const handleRentableChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -87,14 +96,73 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
         );
     };
 
-    const handleSave = async () => {
-        console.log("Saving updated product:", editedProduct);
-        setProduct(editedProduct);
-        setIsEditing(false);
-
-        const response = await axios.patch("/api/vendor/submitEditedProduct", editedProduct);
-        console.log(response);
+    const handlePhotosUpload = (urls: string[]) => {
+        setEditedProduct((prev) => 
+            prev ? { 
+                ...prev, 
+                photos: [...prev.photos, ...urls] 
+            } : null
+        );
     };
+
+    const handleSave = async () => {
+        try {
+            const response = await axios.patch("/api/vendor/submitEditedProduct", editedProduct);
+            if (response.data.success) {
+                setProduct(editedProduct);
+                setIsEditing(false);
+                toast.success("Product Editing Success");
+            } else {
+                console.error("Failed to update product:", response.data.message);
+            }
+        } catch (error) {
+            console.error("Error updating product:", error);
+        }
+    };
+
+    const handleProductDeletion = async () => {
+        try {
+            const {product_slug}=await params;
+            if (!window.confirm("Are you sure you want to delete this product?")) {
+                return;
+            }
+    
+            setIsLoading(true); 
+            const response = await axios.delete(`/api/marketplace/product?product_slug=${product_slug}`);
+    
+            if (response.data.success) {
+               
+                toast.success("Product deleted successfully");
+                router.push('/dashboard'); 
+            } else {
+              
+                toast.error(response.data.message || "Failed to delete product");
+            }
+        } catch (error: any) {
+        
+            console.error("Error deleting product:", error);
+            toast.error(error.response?.data?.message || "Failed to delete product");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    // Add a delete button to your UI
+    <Button 
+        variant="destructive"
+        onClick={handleProductDeletion}
+        disabled={isLoading}
+        className="mt-4"
+    >
+        {isLoading ? (
+            <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Deleting...
+            </>
+        ) : (
+            "Delete Product"
+        )}
+    </Button>
 
     if (isLoading) {
         return (
@@ -104,7 +172,6 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
         );
     }
 
-    // Show access denied message if user doesn't have access
     if (hasAccess === false) {
         return (
             <div className="p-6 max-w-4xl mx-auto">
@@ -125,7 +192,13 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
         <div className="p-6 max-w-4xl mx-auto space-y-6">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
+                    <div className="flex flex-row gap-3 items-center">
                     <CardTitle>Product: {product?.name}</CardTitle>
+                    <Button variant={"destructive"} onClick={handleProductDeletion}>
+                        Delete this product
+                        </Button>
+                    </div>
+                  
                     <Button 
                         onClick={() => {
                             if (isEditing) setEditedProduct(product);
@@ -159,10 +232,7 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
                                 </div>
                             )}
                             {isEditing && (
-                                <Button variant="outline" className="flex items-center gap-2">
-                                    <UploadCloud className="w-4 h-4" />
-                                    Upload Photo
-                                </Button>
+                                <MultiImageUpload onUploadComplete={handlePhotosUpload} />
                             )}
 
                             {/* Editable Fields */}
@@ -200,6 +270,7 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
                                     {isEditing ? (
                                         <Input
                                             name="amount"
+                                            type="number"
                                             value={editedProduct?.amount ?? ""}
                                             onChange={handleInputChange}
                                             className="w-full"
@@ -252,8 +323,8 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
                                             onChange={handleRentableChange}
                                             className="w-full p-2 border rounded-md"
                                         >
-                                            <option value="Rentable" className="text-green-800">Rentable</option>
-                                            <option value="Sellable" className="text-blue-800">Sellable</option>
+                                            <option value="Rentable">Rentable</option>
+                                            <option value="Sellable">Sellable</option>
                                         </select>
                                     ) : (
                                         <div className="p-2 border rounded-md">
@@ -271,7 +342,6 @@ export default function Profile({ params }: { params: Promise<{ product_slug: st
                         </>
                     ) : (
                         <div>No product found</div>
-                     
                     )}
                 </CardContent>
             </Card>

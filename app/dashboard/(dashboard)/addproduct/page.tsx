@@ -14,6 +14,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/hooks/userHook";
 import MultiImageUpload from "@/components/cloudinary/MultipleImageUpload";
+import axios from "axios";
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const categories = [
   "Electronics",
@@ -26,6 +30,7 @@ const categories = [
 
 export default function AddProduct() {
   const { user, loading } = useUser();
+  const router=useRouter();
 
   if (loading) {
     return (
@@ -53,7 +58,20 @@ export default function AddProduct() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
+
+    if(formData.description=="" || formData.name==""||formData.amount==""||formData.photos.length<=0)
+    {
+        if(formData.photos.length<=0)
+            {
+                toast.error("You Forget to add photos or upload them");
+            }
+            else{
+                toast.error("Enter all required Fields");
+            }
+          
+        return;
+    }
     const productData = {
       ...formData,
       amount: parseInt(formData.amount),
@@ -62,7 +80,17 @@ export default function AddProduct() {
         : null,
     };
 
-    console.log("Ready to submit:", productData);
+    const response = await axios.post("/api/vendor/addProduct",productData);
+
+    if(response.status==201)
+    {
+        router.push("/dashboard");
+        toast.success("Product Added Successfully!");
+    }
+    else{
+        toast.error("Product Adding Failed");
+    }
+   
   };
 
   return (

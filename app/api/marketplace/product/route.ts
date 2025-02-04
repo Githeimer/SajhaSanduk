@@ -1,5 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
 import ProductDetailfromSlug from "@/helpers/db/ProductsAsPerSlug";
+import DeleteProductBySlug from "@/helpers/db/vendor/DeleteProduct";
 
 interface ProductsData {
     success: boolean;
@@ -54,3 +55,41 @@ interface ProductsData {
         );
       }
   }
+
+  
+  export async function DELETE(request: NextRequest) {
+      try {
+          const product_slug = request.nextUrl.searchParams.get("product_slug");
+          
+          if (!product_slug) {
+              return NextResponse.json({
+                  message: "Product slug is required",
+                  success: false
+              }, { status: 400 });
+          }
+  
+          const response = await DeleteProductBySlug(product_slug);
+  
+          if (!response.success) {
+              return NextResponse.json({
+                  message: response.message,
+                  error: response.error,
+                  success: false
+              }, { status: 400 });
+          }
+  
+          return NextResponse.json({
+              message: "Product deleted successfully",
+              success: true
+          }, { status: 200 });
+  
+      } catch (error: any) {
+          console.error('Unexpected error:', error);
+          return NextResponse.json({
+              message: "Unexpected Deleting Product Error",
+              error: error.message,
+              success: false
+          }, { status: 500 });
+      }
+  }
+  

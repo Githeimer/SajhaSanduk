@@ -51,7 +51,6 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
     };
 
-    console.log(userData);
 
     const { data, error } = await supabase
       .from("user_info")

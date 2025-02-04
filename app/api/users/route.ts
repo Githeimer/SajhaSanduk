@@ -39,8 +39,6 @@ export async function PATCH(request:NextRequest)
         const user_id:any = request.nextUrl.searchParams.get("uid");
         const data=await request.json();
 
-        console.log("received data",data);
-        console.log("user id",user_id);
 
         const response=await updateUserProfile(user_id,data);
 

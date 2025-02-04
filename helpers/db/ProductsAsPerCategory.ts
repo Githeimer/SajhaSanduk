@@ -49,7 +49,7 @@ export default async function ExtractProductsfromDB(category: string): Promise<P
         const { data, error } = await supabase
           .from("product_detail")
           .select("*")
-          .gt("rating", 4)
+          .gt("rating", 0)
           .eq("Category", cat)
           .limit(6);
         if (error) {

@@ -21,7 +21,6 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
           `/api/marketplace/product?product_slug=${resolvedParams.product_slug}`
         );
 
-        console.log(response);
 
         if (response.status === 200 && response.data.success) {
           setProductInfo(response.data.data.productDetail[0]);
@@ -63,8 +62,9 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
   }
 
   return (
-    <div className="landing_container">
-      <h1>Product: {productId}</h1>
+    <div className="mt-11">
+    <div className="mt-11">
+    <h1>Product: {productId}</h1>
       {productInfo ? (
         <div>
           <h2>{productInfo.name}</h2>
@@ -101,6 +101,7 @@ const Product = ({ params }: { params: Promise<{ product_slug: string }> }) => {
       ) : (
         <div>No products found. Try searching in the marketplace.</div>
       )}
+    </div>
     </div>
   );
 };

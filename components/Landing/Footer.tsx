@@ -19,7 +19,7 @@ export default function Footer() {
           <Link href="/" >
             <Button variant="link" className=" text-white ">Home</Button>
           </Link>
-          <Link href="/dashboard/" >
+          <Link href="/dashboard" >
             <Button variant="link" className=" text-white ">Dashboard</Button>
           </Link>
           <Link href="/marketplace">

@@ -68,7 +68,16 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
         location:tempUserData.location
       };
 
-      console.log(dataToUpdate);
+     if(dataToUpdate.name="")
+     {
+      toast.error("Name Missing")
+      return;
+     }
+     else if(dataToUpdate.phonenumber.length>=10)
+     {
+      toast.error("Phone Number greater than 10 digits")
+      return;
+     }
 
       const updatedResponse = await axios.patch(`/api/users?uid=${resolvedParams.profile}`, dataToUpdate);
 

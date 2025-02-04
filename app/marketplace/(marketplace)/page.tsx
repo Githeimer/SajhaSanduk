@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import MarketCard from "@/components/ui/marketCard";
@@ -85,7 +84,7 @@ const MarketplaceContent = () => {
 
 const Marketplace = () => {
   return (
-    <Suspense fallback={<p>Loading marketplace...</p>}>
+    <Suspense>
       <MarketplaceContent />
     </Suspense>
   );

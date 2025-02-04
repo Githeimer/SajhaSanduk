@@ -5,7 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { useUser } from "@/hooks/userHook";
 import Logout from "../Auth/Logout";
 import { Button } from "../ui/button";
-import { ShoppingCart, ChevronDown } from "lucide-react";
+import { ShoppingCart, ChevronDown, Router } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,10 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { user, logout,loading } = useUser();
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const router=useRouter();
 
   if (loading) {
     return (
@@ -146,11 +148,22 @@ const Navbar = () => {
                 <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
                   Team
                 </li>
-                <Link href={"/dashboard"}>
+              <div className="flex flex-col w-full items-center justify-around gap-2">
+              <Button  variant={"link"} onClick={()=>{
+                  router.push("/dashboard");
+                }}>
                   <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
                     Dashboard
                   </li>
-                </Link>
+                </Button>
+                <Button variant={"link"} onClick={()=>{
+                  router.push(`/dashboard/${user.id}`);
+                }}>
+                  <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
+                    Profile
+                  </li>
+                </Button>
+              </div>
                 {user && (
                   <Link href="/marketplace/cart">
                     <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
@@ -163,13 +176,9 @@ const Navbar = () => {
               {/* Mobile Sign Up and Login Buttons */}
               <div className="flex flex-col items-center gap-4 p-4">
                 {user ? (
-                  <Button
-                    variant={"destructive"}
-                    onClick={logout}
-                    className="w-32 transition-all"
-                  >
-                    Logout
-                  </Button>
+                 
+                    <Logout/>
+                 
                 ) : (
                   <>
                     <Link href="/login">
