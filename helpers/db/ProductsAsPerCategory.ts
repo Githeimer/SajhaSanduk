@@ -50,6 +50,7 @@ export default async function ExtractProductsfromDB(category: string): Promise<P
           .from("product_detail")
           .select("*")
           .eq("Category", cat)
+          .eq("is_rented",false)
           .limit(6);
         if (error) {
           console.error(`Error fetching category ${cat}: `, error.message);
