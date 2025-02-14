@@ -1,61 +1,141 @@
-// app/api/payment/initialize-esewa/route.ts
+// app/api/payment/verify-esewa/route.ts
 
 import { NextResponse } from 'next/server';
-import { prepareEsewaPayment } from '@/lib/esewa';
-import { PaymentInitialization } from '@/app/types/payment';
+import crypto from 'crypto';
+
+const SECRET_KEY = process.env.ESEWA_SECRET_KEY || '8gBm/:&EnhH.1/q';
+
+interface EsewaResponse {
+  transaction_code: string;
+  status: string;
+  total_amount: string;
+  transaction_uuid: string;
+  product_code: string;
+  signed_field_names: string;
+  signature: string;
+  [key: string]: string;
+}
+
+interface VerificationResult {
+  isValid: boolean;
+  details: {
+    signatureString: string;
+    calculatedSignature: string;
+    receivedSignature: string;
+  };
+}
+
+function generateVerificationSignature(responseData: EsewaResponse): VerificationResult {
+  try {
+    // Get the signed fields, but exclude 'signed_field_names' from signature calculation
+    const signedFields: string[] = responseData.signed_field_names
+      .split(',')
+      .filter((field: string) => field !== 'signed_field_names');
+    
+    // Create signature string without the signed_field_names field
+    const signatureString: string = signedFields
+      .map((field: string): string => `${field}=${responseData[field]}`)
+      .join(',');
+
+    console.log('Fields used for signature:', signedFields);
+    console.log('Signature string:', signatureString);
+
+    const calculatedSignature: string = crypto
+      .createHmac('sha256', SECRET_KEY)
+      .update(signatureString)
+      .digest('base64');
+
+    return {
+      isValid: calculatedSignature === responseData.signature,
+      details: {
+        signatureString,
+        calculatedSignature,
+        receivedSignature: responseData.signature
+      }
+    };
+  } catch (error) {
+    console.error('Signature generation error:', error);
+    return {
+      isValid: false,
+      details: {
+        signatureString: '',
+        calculatedSignature: '',
+        receivedSignature: responseData.signature || ''
+      }
+    };
+  }
+}
 
 export async function POST(request: Request) {
   try {
-    const body: PaymentInitialization = await request.json();
-    
-    // Log the incoming request for debugging
-    console.log('Payment initialization request:', body);
+    const body = await request.json();
 
-    if (!body.total || typeof body.total !== 'number') {
+    if (!body.data) {
+      console.error('Missing payment data in request');
       return NextResponse.json(
-        { success: false, message: 'Invalid amount format' },
+        { success: false, message: 'Payment data is required' },
         { status: 400 }
       );
     }
 
-    // Generate a unique transaction ID
-    const transactionId = `TX-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+    // Decode and parse the response data
+    const decodedString: string = Buffer.from(body.data, 'base64').toString('utf-8');
+    console.log('Decoded eSewa response:', decodedString);
 
-    try {
-      // Prepare eSewa payment data with validation
-      const paymentData = prepareEsewaPayment(
-        body.total,
-        transactionId,
-        0,  // shipping charge
-        0,  // service charge
-        0   // tax amount
-      );
+    const responseData: EsewaResponse = JSON.parse(decodedString);
+    console.log('Parsed response data:', responseData);
 
-      // Return the payment URL and data
-      return NextResponse.json({
-        success: true,
-        payment_url: `${process.env.NEXT_PUBLIC_ESEWA_GATEWAY_URL}/api/epay/main/v2/form`,
-        payment_data: paymentData
-      });
+    // Verify the signature
+    const verificationResult: VerificationResult = generateVerificationSignature(responseData);
+    
+    console.log('Verification details:', {
+      fieldsUsed: responseData.signed_field_names.split(','),
+      signatureString: verificationResult.details.signatureString,
+      calculatedSignature: verificationResult.details.calculatedSignature,
+      receivedSignature: verificationResult.details.receivedSignature,
+      isValid: verificationResult.isValid
+    });
 
-    } catch (error) {
-      // Handle validation errors
+    if (!verificationResult.isValid) {
       return NextResponse.json(
         { 
           success: false, 
-          message: error instanceof Error ? error.message : 'Payment initialization failed',
-          code: 'ES705'
+          message: 'Invalid payment signature',
+          details: verificationResult.details
         },
         { status: 400 }
       );
     }
 
+    // Additional verification checks
+    if (responseData.status !== 'COMPLETE') {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: `Payment status is ${responseData.status}`,
+          details: { status: responseData.status }
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Payment verified successfully',
+      data: {
+        transactionCode: responseData.transaction_code,
+        amount: responseData.total_amount,
+        status: responseData.status,
+        transactionId: responseData.transaction_uuid
+      }
+    });
+
   } catch (error) {
-    console.error('Payment initialization error:', error);
+    console.error('Payment verification error:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: 'An error occurred during payment initialization',
+        message: 'Payment verification failed',
         error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
