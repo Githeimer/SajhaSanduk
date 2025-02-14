@@ -1,6 +1,7 @@
+// app/marketplace/cart/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { X, ShoppingBag, CreditCard } from 'lucide-react'
@@ -8,41 +9,53 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import axios from 'axios'
+import { useUser } from "@/hooks/userHook"
+import { toast } from "sonner"
 
-// Mock data for cart items
-
-interface CarItems{
+interface CartItem {
   id: number
   name: string
   price: number
   image: string
-  isRentable:boolean
-  rentalDays:number
+  isRentable: boolean
+  rentalDays: number
 }
-const initialCartItems = [
-  {
-    id: 1,
-    name: "New GST",
-    price: 50,
-    image: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1738769380/profile_images/wajgdxq0qhbugqgvtf9w.jpg",
-    isRentable: true,
-    rentalDays: 3,
-  },
-  {
-    id: 2,
-    name: "Another Product",
-    price: 750,
-    image: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1738769383/profile_images/kutlrouufghb3vwk87bm.jpg",
-    isRentable: false,
-    rentalDays:0
-  },
-]
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const { user } = useUser()
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id))
+  useEffect(() => {
+    if (user?.id) {
+      fetchCartItems()
+    }
+  }, [user])
+
+  const fetchCartItems = async () => {
+    try {
+      const response = await axios.get(`/api/marketplace/cart?uid=${user.id}`)
+      if (response.data.success) {
+        setCartItems(response.data.data)
+      }
+    } catch (error) {
+      toast.error("Failed to fetch cart items")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const removeItem = async (id: number) => {
+    try {
+      const response = await axios.delete(`/api/marketplace/cart?uid=${user.id}&pid=${id}`)
+      if (response.data.success) {
+        setCartItems(items => items.filter(item => item.id !== id))
+        toast.success("Item removed from cart")
+      }
+    } catch (error) {
+      toast.error("Failed to remove item from cart")
+    }
   }
 
   const calculateSubtotal = () => {
@@ -55,17 +68,38 @@ export default function CartPage() {
   }
 
   const subtotal = calculateSubtotal()
-  const shipping = 1000 // Mock shipping cost in Rs.
-  const total = subtotal + shipping
+
+  const total = subtotal 
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (!loading && cartItems.length === 0) {
+    return (
+      <div className="landing_container mx-auto px-4 py-8 text-center ">
+        <h1 className="text-3xl font-bold mb-8 mt-11">Your Cart is Empty</h1>
+        <Button variant="outline" asChild>
+          <Link href="/marketplace">
+            <ShoppingBag className="mr-2 h-4 w-4" /> Continue Shopping
+          </Link>
+        </Button>
+      </div>
+    )
+  }
 
   return (
-    <div className="landing_container mx-auto px-4 py-8 ">
+    <div className="landing_container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
       <div className="grid md:grid-cols-3 gap-8">
         <Card className="md:col-span-2">
           <CardContent className="p-6">
             <ScrollArea className="h-[400px] pr-4">
-              {cartItems.map((item:CarItems) => (
+              {cartItems.map((item: CartItem) => (
                 <div key={item.id} className="flex items-center space-x-4 py-4">
                   <div className="relative w-24 h-24">
                     <Image
@@ -110,8 +144,8 @@ export default function CartPage() {
                 <span>Rs. {subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>Rs. {shipping.toLocaleString()}</span>
+                <span>Charges</span>
+                <span>Rs. 0</span>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold">
@@ -125,7 +159,7 @@ export default function CartPage() {
               <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
             </Button>
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/products">
+              <Link href="/marketplace">
                 <ShoppingBag className="mr-2 h-4 w-4" /> Continue Shopping
               </Link>
             </Button>

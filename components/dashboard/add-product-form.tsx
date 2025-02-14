@@ -15,10 +15,7 @@ export default function AddProductForm({ onClose }: AddProductFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Product Name:", productName)
-    console.log("Product Price:", productPrice)
-    console.log("Product Stock:", productStock)
+   
     onClose()
   }
 

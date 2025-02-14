@@ -19,8 +19,15 @@ import { useRouter } from "next/navigation";
 const Navbar = () => {
   const { user, logout,loading } = useUser();
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [cartLength,setCartLength]=React.useState(0);
   const router=useRouter();
 
+
+  useEffect(() => {
+    setCartLength(user?.CART?.length || 0);
+  }, [user?.CART]);
+
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -29,7 +36,7 @@ const Navbar = () => {
     );
   }
 
-
+ 
   return (
     <div className="fixed top-0 w-full z-[200]">
       <div className="backdrop-blur-lg bg-[#ffffff]/60 border-b border-white/20 shadow-sm">
@@ -43,7 +50,6 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Navbar Links (Desktop) */}
           <div className="hidden md:flex flex-row mx-auto items-center justify-center gap-3 font-bold cursor-pointer">
             <ul className="flex flex-row items-center gap-4">
               <Link href={"/marketplace"} className="hover:text-[#2d20c0] transition-colors">
@@ -52,7 +58,7 @@ const Navbar = () => {
               <Link href={"/#about"} className="hover:text-[#2d20c0] transition-colors">
                 About
               </Link>
-              <Link href={"/"} className="hover:text-[#2d20c0] transition-colors">
+              <Link href={"/#team"} className="hover:text-[#2d20c0] transition-colors">
                 Team
               </Link>
             </ul>
@@ -74,7 +80,7 @@ const Navbar = () => {
                   <Button variant="ghost" size="icon" className="relative">
                     <ShoppingCart className="h-5 w-5" />
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                      0
+                      {cartLength}
                     </span>
                   </Button>
                 </Link>
@@ -160,16 +166,20 @@ const Navbar = () => {
                   router.push(`/dashboard/${user.id}`);
                 }}>
                   <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
-                    Profile
+                   
                   </li>
                 </Button>
               </div>
                 {user && (
                   <Link href="/marketplace/cart">
-                    <li className="transition-all duration-300 hover:text-[#2d20c0] hover:scale-105 border-b border-gray-300/50 w-full text-center py-2">
-                      Cart
-                    </li>
-                  </Link>
+                  <Button variant="ghost" size="icon" className="relative">
+                  CART
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                     {user.CART.length}
+                    </span>
+                  </Button>
+                </Link>
                 )}
               </ul>
 

@@ -23,7 +23,7 @@ export default function LoginForm() {
     try {
       setIsLoading(true);
       const response = await axios.post("/api/users/login", { email, password });
-      console.log(response.data);
+  
 
       if (response.data.success) {
         toast.success("Login successful!");

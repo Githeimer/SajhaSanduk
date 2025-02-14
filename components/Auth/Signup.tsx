@@ -24,7 +24,7 @@ const SignupForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [isMapVisible, setIsMapVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(true);
   const [showPasswordBar, setShowPasswordBar] = useState(false);
   const [showPasswordMatch, setShowPasswordMatch] = useState(false);
   const [isPasswordStrong, setIsPasswordStrong] = useState(false);

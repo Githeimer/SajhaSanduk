@@ -1,15 +1,35 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SearchBar() {
+ function SearchBarComponent() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const searchFromUrl = searchParams.get("search");
+    if (searchFromUrl) {
+      setSearchQuery(searchFromUrl);
+    }
+  }, [searchParams]);
 
   const handleSearch = () => {
-    router.push(`/marketplace?search=${searchQuery}`);
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (searchQuery.trim()) {
+      params.set("search", searchQuery.trim());
+    } else {
+      params.delete("search");
+    }
+
+    if (!params.has("category")) {
+      params.set("category", "All");
+    }
+
+    router.push(`/marketplace?${params.toString()}`);
   };
 
   return (
@@ -20,8 +40,24 @@ export default function SearchBar() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="mr-2"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSearch();
+          }
+        }}
       />
       <Button onClick={handleSearch}>Search</Button>
     </div>
   );
 }
+
+export default function SearchBar()
+{
+return(
+  <Suspense fallback={<>Loading...</>}>
+      <SearchBarComponent />
+    </Suspense>
+)
+}
+
+

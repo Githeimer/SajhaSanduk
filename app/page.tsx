@@ -4,7 +4,7 @@ import Products from '@/components/Landing/Products'
 import React from 'react'
 import { BentoGrid } from '@/components/ui/bento-grid'
 import { ProjectOverview } from '@/components/Landing/Overview'
-
+import Team from '@/components/Landing/Team'
 
 const Home = () => {
   return (
@@ -17,6 +17,7 @@ const Home = () => {
       <BentoGrid />
     </main>
     <ProjectOverview></ProjectOverview>
+    <Team></Team>
      
     </div>
   )

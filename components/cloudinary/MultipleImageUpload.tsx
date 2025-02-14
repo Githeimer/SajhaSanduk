@@ -60,7 +60,7 @@ export default function MultiImageUpload({ onUploadComplete }: MultiImageUploadP
       }
 
       setUploadedUrls(uploadedImages);
-      console.log("Uploaded Images:", uploadedImages);
+    
 
       // Call onUploadComplete only if it's provided
       if (onUploadComplete) {

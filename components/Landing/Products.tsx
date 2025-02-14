@@ -6,55 +6,59 @@ import { Button } from '../ui/button';
 const FeaturedProducts = [
     {
       name: "Arduino Set",
-      price: 150,
+      price: 100,
       rating: 4,
       image: "https://qqtrading.com.my/image/cache/catalog/Products/Arduino/KIT/KIT-STARTER-UNO-700x700.jpg",
-      category: "Robotics",
+      category: "Electronics",
       listedBy: {
-        name: "Larry ",
+        name: "Pranay",
         avatar: "https://ui.shadcn.com/avatars/04.png",
       },
-      description: "Random product too plain dont buy jk rent rent rent",
+      description: "This arduino set contains jumper wires, breadboard, IR Sensor, LCD board and Servo Motor(x4)",
       listingType: true,
+      slug:'arduino_set_2973'
     },
     {
-      name: "Soldering Iron Set",
+      name: "Solid State Amp/Preamp Pedal",
       price: 200,
       rating: 4,
-      image: "https://a1autozone.co.uk/wp-content/uploads/2022/06/WWS-GLK9-Y02S-Soldering-Gun-Picture.png",
+      image: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1739556891/profile_images/zhzbbmrodo1kpw8dcvsv.jpg",
       category: "Robotics",
       listedBy: {
         name: "Goated Ram",
         avatar: "https://github.com/shadcn.png",
       },
-      description: "Another random product, better suited for renting.",
+      description: "The Acorn Amplifiers Solid State Amp/Preamp Pedal is an amp-in-a-box version of a certain low-watt amp that has been used by the likes of legends such as Josh Homme as a secret weapon in the studio. The pedal doubles as both a preamp and its own standalone 10w amp head complete with a dedicated speaker out. From crisp, clean highs at low gain to roaring distortion when cranked, this pedal offers a wide variety of sounds and flavors. Top it off with a 3-band EQ and a switch to add more saturation to your signal, and there's very little left to desire. They say big things often come in small packages, and this pedal is a prime example of that.",
       listingType: true,
+      slug:"_solid_state_amppreamp_pedal_7807"
     },
     {
       name: "3rd Sem Notes (CS)",
-      price: 500,
+      price: 300,
       rating: 4,
       image: "https://www.theopennotebook.com/wp-content/uploads/2012/05/pile-of-notes.jpg",
-      category: "Study",
+      category: "Books",
       listedBy: {
-        name: "CR Kta",
-        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW4nZ4G82StJYNgPRfYDBKbXdo1q1jHZj-TA&s",
+        name: "Himu",
+        avatar: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1738647532/profile_images/llgglcum5qpfldle1rgw.jpg",
       },
-      description: "Yet another rentable product with a good daily rate.",
+      description: "Complete hand written notes for sale, Computer Science II/I. Worth buying.",
       listingType: true,
+      slug:'_3rd_sem_notes_(cs)_7535'
     },
     {
       name: "EDRG Set",
-      price: 120,
+      price: 500,
       rating: 4,
       image: "https://m.media-amazon.com/images/I/61ug5qrIp6S._AC_UF1000,1000_QL80_.jpg",
-      category: "Study",
+      category: "Books",
       listedBy: {
-        name: "Pasale Didi",
+        name: "Alvina Shrestha",
         avatar: "https://ui.shadcn.com/avatars/03.png",
       },
       description: "A buyable product that is worth your money.",
-      listingType: true,
+      listingType: false,
+      slug:"edrg_set_6330"
     },
   ];
   
@@ -77,6 +81,7 @@ const Products = () => {
           description={ele.description}
           listedBy={ele.listedBy}
           listingType={ele.listingType}
+          slug={ele.slug}
         />
         
     })}

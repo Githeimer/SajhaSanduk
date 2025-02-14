@@ -2,7 +2,7 @@ import { SiNextdotjs, SiTypescript, SiSupabase, SiCashapp,SiCloudinary } from "r
 
 export function ProjectOverview() {
   return (
-    <div className="bg-gray-100 p-8 rounded-md shadow-md" >
+    <div className="bg-gray-100 p-8 rounded-md shadow-none" >
       <div className="landing_container grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Section: Project Description */}
         <div>

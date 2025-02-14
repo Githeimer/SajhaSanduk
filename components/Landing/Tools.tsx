@@ -5,6 +5,7 @@ import { MdOutlineMenuBook } from "react-icons/md";
 import { IoHardwareChip } from "react-icons/io5";
 import { PiPencilRulerFill } from "react-icons/pi";
 import { MdMiscellaneousServices } from "react-icons/md";
+import { Music4Icon as Music } from 'lucide-react';
 
 const Tools = () => {
   return (
@@ -39,11 +40,11 @@ const Tools = () => {
               <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Design</p>
             </div>
           </Link>
-          <Link href="#">
+          <Link href="/marketplace?category=Music">
             <div className="relative text-center group">
               <div className="absolute inset-0 h-16 w-16 mx-auto rounded-full opacity-60 blur-lg -z-10 group-hover:opacity-80 group-hover:blur-md transition-all duration-300"></div>
-              <MdMiscellaneousServices className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
-              <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Services</p>
+              <Music className="mx-auto text-gray-700 group-hover:scale-110 transition-transform duration-300" />
+              <p className="text-sm mt-2 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">Music</p>
             </div>
           </Link>
         </div>

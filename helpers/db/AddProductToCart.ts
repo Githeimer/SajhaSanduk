@@ -7,18 +7,28 @@ interface CartProduct {
 
 export default async function addToCart(user_id: string, cartProduct: CartProduct) {
   try {
-    // First get the current cart array
-    const { data: currentData, error: fetchError } = await supabase
+    const { data, error } = await supabase
       .from('user_info')
-      .select('cart')
+      .select('CART')
       .eq('id', user_id)
       .single();
-
-    if (fetchError) {
+    
+    if (error) {
       throw new Error('Failed to fetch current cart');
     }
 
-    const currentCart = currentData.cart || [];
+    const currentCart = data.CART || [];
+
+    const productExists = currentCart.some(
+      (item: CartProduct) => item.product_id === cartProduct.product_id
+    );
+
+    if (productExists) {
+      return {
+        success: false,
+        message: 'Product already exists in cart'
+      };
+    }
 
     currentCart.push({
       product_id: cartProduct.product_id,
@@ -27,7 +37,7 @@ export default async function addToCart(user_id: string, cartProduct: CartProduc
 
     const { data: updatedData, error: updateError } = await supabase
       .from('user_info')
-      .update({ cart: currentCart })
+      .update({ CART: currentCart })
       .eq('id', user_id)
       .select();
 

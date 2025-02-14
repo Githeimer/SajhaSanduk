@@ -14,7 +14,7 @@ interface ProductDetail {
   max_allowable_days: number | null;
   is_rented: boolean;
   category: string;
-  user_details?: any; // Add this to store user details
+  user_details?: any;
 }
 
 interface ProductsResponse {
@@ -24,81 +24,63 @@ interface ProductsResponse {
   error?: any;
 }
 
-const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music","Others"];
+interface QueryParams {
+  category?: string;
+  search?: string;
+}
+
+const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music", "Others"];
 
 async function fetchUserDetailsForProducts(products: ProductDetail[]): Promise<ProductDetail[]> {
   const userDetailPromises = products.map(async (product) => {
     const userResponse = await UserDetailById(product.listed_by);
-    if (userResponse.success) {
-      product.user_details = userResponse.data; 
-    } else {
-      product.user_details = null; 
-    }
+    product.user_details = userResponse.success ? userResponse.data : null;
     return product;
   });
 
   return Promise.all(userDetailPromises);
 }
 
-export default async function ExtractProductsfromDB(category: string): Promise<ProductsResponse> {
+export default async function ExtractProductsfromDB({
+  category = "All",
+  search,
+}: QueryParams): Promise<ProductsResponse> {
   try {
-    let totalProducts: ProductDetail[] = [];
+    let query = supabase.from("product_detail").select("*").eq("is_rented", false);
 
-    if (category === "default") {
-      const categoryPromises = categories.map(async (cat) => {
-        const { data, error } = await supabase
-          .from("product_detail")
-          .select("*")
-          .eq("Category", cat)
-          .eq("is_rented",false)
-          .limit(6);
-        if (error) {
-          console.error(`Error fetching category ${cat}: `, error.message);
-          return [];
-        }
-        return data || [];
-      });
-
-      const categoryData = await Promise.all(categoryPromises);
-
-      categoryData.forEach((data) => {
-        if (Array.isArray(data)) {
-          totalProducts = [...totalProducts, ...data];
-        }
-      });
-    } else {
-      const { data, error } = await supabase
-        .from("product_detail")
-        .select("*")
-        .eq("Category", category)
-        .limit(15);
-
-      if (error) {
-        return {
-          success: false,
-          message: "Failed Fetching data of category: " + category,
-          error: error.message || error,
-        };
-      }
-      totalProducts = data || [];
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     }
 
-    if (totalProducts.length <= 0) {
+
+    if (category && category !== "All") {
+      query = query.eq("Category", category);
+    }
+
+    const { data: totalProducts, error } = await query;
+
+    if (error) {
       return {
         success: false,
-        message: "No data found for Category: " + category,
+        message: "Failed to fetch products",
+        error: error.message,
       };
     }
 
-    // Fetch user details for all products
-    totalProducts = await fetchUserDetailsForProducts(totalProducts);
+    if (!totalProducts || totalProducts.length === 0) {
+      return {
+        success: false,
+        message: "No products found for the specified criteria",
+      };
+    }
+
+    const productsWithUserDetails = await fetchUserDetailsForProducts(totalProducts);
 
     return {
       success: true,
       message: "Data fetched successfully",
-      data: totalProducts,
+      data: productsWithUserDetails,
     };
-
   } catch (error: any) {
     console.error("Unexpected Error:", error);
     return {

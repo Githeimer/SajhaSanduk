@@ -12,7 +12,6 @@ export default async function UserDetailById(id:Number)
                 error:error
             }
         }
-        
 
         return {
             success:true,
@@ -27,3 +26,4 @@ export default async function UserDetailById(id:Number)
         }
     }
 }
+

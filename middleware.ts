@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
 
   // Define public and protected paths
   const isPublicPath =  path === '/login' || path === '/signup';
-  const isProtectedPath = path.startsWith('/profile') || path.startsWith('/dashboard');
+  const isProtectedPath = path.startsWith('/profile') || path.startsWith('/dashboard')||path.includes('/marketplace/cart');
 
 
   if (isPublicPath && token) {
@@ -22,5 +22,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile', '/dashboard', '/dashboard/:path*', '/marketplace', '/', '/login', '/signup'],
+  matcher: ['/profile', '/dashboard', '/dashboard/:path*', '/marketplace','/marketplace/:path*', '/', '/login', '/signup'],
 };

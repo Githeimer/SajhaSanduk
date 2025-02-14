@@ -1,10 +1,26 @@
 "use client";
-import React from "react";
-import { Search } from "lucide-react"; // Using Lucide React for icons
-import { Input } from "../ui/input"; // Assuming Input component is a custom component
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+import { Input } from "../ui/input";
 import Tools from "./Tools";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/marketplace?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="relative flex items-center justify-center flex-col h-96 md:h-[29rem] px-4 bg-hero-pattern bg-center mt-16">
       {/* Overlay to reduce the opacity of the background image */}
@@ -18,25 +34,27 @@ const Hero = () => {
           Earn with Ease
         </h1>
 
-        
         <div className="w-full max-w-[300px] md:max-w-[600px]">
           <div className="flex items-center justify-center">
             <Input
               placeholder="Something you want to Rent...Eg: Arduino, Drafter."
-              className="rounded-none text-sm focus-visible:ring-0  h-8 md:h-[50px] p-1 md:p-3  bg-white border-blue-500 w-full glow-effect" // Consistent height and focus removal
+              className="rounded-none text-sm focus-visible:ring-0 h-8 md:h-[50px] p-1 md:p-3 bg-white border-blue-500 w-full glow-effect"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <Search
-              className="text-white bg-blue-500 p-3 h-8 md:h-[50px] rounded-r-lg cursor-pointer" // Same height as the input field, rounded border
-              size={40} // Adjust icon size to be proportionate
+              className="text-white bg-blue-500 p-3 h-8 md:h-[50px] rounded-r-lg cursor-pointer"
+              size={40}
+              onClick={handleSearch}
             />
           </div>
         </div>
 
-        <div className=" pt-5 md:pt-10">
+        <div className="pt-5 md:pt-10">
           <Tools></Tools>
         </div>
       </div>
-      
     </div>
   );
 };
