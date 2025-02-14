@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import EsewaCheckout from "@/components/payment/checkoutButton"
 
 // Mock data for cart items
 
@@ -27,15 +28,8 @@ const initialCartItems = [
     image: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1738769380/profile_images/wajgdxq0qhbugqgvtf9w.jpg",
     isRentable: true,
     rentalDays: 3,
-  },
-  {
-    id: 2,
-    name: "Another Product",
-    price: 750,
-    image: "https://res.cloudinary.com/dbehu3cbs/image/upload/v1738769383/profile_images/kutlrouufghb3vwk87bm.jpg",
-    isRentable: false,
-    rentalDays:0
-  },
+  }
+ 
 ]
 
 export default function CartPage() {
@@ -121,9 +115,19 @@ export default function CartPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
-            <Button className="w-full">
-              <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
-            </Button>
+          {/* <form
+      action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+      method="POST"
+      target="_blank"
+    >
+      <Button type="submit" className="w-full">
+        <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
+      </Button>
+    </form> */}
+    
+  
+       <EsewaCheckout itemId={cartItems[0].id} totalPrice={total} />
+
             <Button variant="outline" className="w-full" asChild>
               <Link href="/products">
                 <ShoppingBag className="mr-2 h-4 w-4" /> Continue Shopping
