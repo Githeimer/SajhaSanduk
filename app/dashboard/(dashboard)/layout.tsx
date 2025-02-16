@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { PlusCircle, User, Menu, Home, ShoppingBag } from "lucide-react";
+import { PlusCircle, User, Menu, Home, ShoppingBag ,ShoppingCart} from "lucide-react";
 import { useUser } from "@/hooks/userHook";
 import Logout from "@/components/Auth/Logout";
 import Link from "next/link";
@@ -93,6 +93,11 @@ function Sidebar({ user }: { user: any }) {
           <Link href={`/marketplace`}>
             <Button variant="ghost" className="w-full justify-start">
               <ShoppingBag className="mr-2 h-4 w-4" /> Marketplace
+            </Button>
+          </Link>
+          <Link href={`/dashboard/transcations`}>
+            <Button variant="ghost" className="w-full justify-start">
+              <ShoppingCart className="mr-2 h-4 w-4" /> Bought/Rented Products
             </Button>
           </Link>
         </nav>

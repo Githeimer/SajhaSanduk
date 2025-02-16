@@ -10,6 +10,7 @@ import { useUser } from "@/hooks/userHook";
 import axios from "axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
+import VendorTransactions from "@/components/dashboard/vendorTranscation";
 
 interface Product {
   id: number;
@@ -139,6 +140,7 @@ export default function Dashboard() {
       </Card>
 
       {showAddProduct && <AddProductForm onClose={() => setShowAddProduct(false)} />}
+        <VendorTransactions></VendorTransactions>
     </div>
   );
 }
