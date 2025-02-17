@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,7 @@ interface PaymentState {
   paymentData: any;
 }
 
-export default function PaymentSuccessPage() {
+ function PaymentSuccessPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [state, setState] = useState<PaymentState>({
@@ -185,4 +185,12 @@ export default function PaymentSuccessPage() {
       </Card>
     </div>
   )
+}
+
+export default function PaymentSucessPageContent(){
+  return(<>
+  <Suspense fallback="Loading...">
+    <PaymentSuccessPageContent></PaymentSuccessPageContent>
+  </Suspense>
+  </>)
 }
