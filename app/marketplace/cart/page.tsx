@@ -1,4 +1,3 @@
-// app/marketplace/cart/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -12,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import axios from 'axios'
 import { useUser } from "@/hooks/userHook"
 import { toast } from "sonner"
+import PaymentForm from '@/components/payment/PaymentForm'
 
 interface CartItem {
   id: number
@@ -67,9 +67,20 @@ export default function CartPage() {
     }, 0)
   }
 
-  const subtotal = calculateSubtotal()
+  const handlePaymentStart = () => {
+    toast.info("Processing Payment", {
+      description: "Please complete your payment in the eSewa window."
+    })
+  }
 
-  const total = subtotal 
+  const handlePaymentError = (error: Error) => {
+    toast.error("Payment Error", {
+      description: "There was an error processing your payment. Please try again."
+    })
+  }
+
+  const subtotal = calculateSubtotal()
+  const total = subtotal // No shipping cost as per your version
 
   if (loading) {
     return (
@@ -81,7 +92,7 @@ export default function CartPage() {
 
   if (!loading && cartItems.length === 0) {
     return (
-      <div className="landing_container mx-auto px-4 py-8 text-center ">
+      <div className="landing_container mx-auto px-4 py-8 text-center">
         <h1 className="text-3xl font-bold mb-8 mt-11">Your Cart is Empty</h1>
         <Button variant="outline" asChild>
           <Link href="/marketplace">
@@ -99,7 +110,7 @@ export default function CartPage() {
         <Card className="md:col-span-2">
           <CardContent className="p-6">
             <ScrollArea className="h-[400px] pr-4">
-              {cartItems.map((item: CartItem) => (
+              {cartItems.map((item) => (
                 <div key={item.id} className="flex items-center space-x-4 py-4">
                   <div className="relative w-24 h-24">
                     <Image
@@ -135,6 +146,7 @@ export default function CartPage() {
             </ScrollArea>
           </CardContent>
         </Card>
+
         <Card>
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
@@ -154,10 +166,14 @@ export default function CartPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-2">
-            <Button className="w-full">
-              <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
-            </Button>
+          <CardFooter className="flex flex-col space-y-2 p-6">
+            <PaymentForm
+              items={cartItems}
+              total={total}
+              onPaymentStart={handlePaymentStart}
+              onPaymentError={handlePaymentError}
+            />
+            
             <Button variant="outline" className="w-full" asChild>
               <Link href="/marketplace">
                 <ShoppingBag className="mr-2 h-4 w-4" /> Continue Shopping
