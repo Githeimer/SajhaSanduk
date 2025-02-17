@@ -3,7 +3,6 @@ import crypto from 'crypto'
 
 
 
-require('dotenv').config({path: __dirname + '/.env'})
 
 
 export async function GET(req: NextRequest) {
