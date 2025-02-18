@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { XCircle } from 'lucide-react'
+import Link from 'next/link'
 
 export default function PaymentFailurePage() {
   const router = useRouter()
@@ -24,9 +25,7 @@ export default function PaymentFailurePage() {
           <Button variant="outline" onClick={() => router.push('/marketplace/cart')}>
             Return to Cart
           </Button>
-          <Button onClick={() => router.push('/support')}>
-            Contact Support
-          </Button>
+         <Link href="https://tally.so/r/3EN1el">Contact Support</Link>
         </CardContent>
       </Card>
     </div>

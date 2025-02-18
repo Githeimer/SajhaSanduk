@@ -1,4 +1,6 @@
 "use client"
+// Imports UI components, API requests, and authentication hooks.
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +11,8 @@ import { toast, Toaster } from "sonner";
 import { useUser } from '@/hooks/userHook';
 import ImageUpload from '@/components/cloudinary/ImageUpload';
 import LocationMap from '@/components/Auth/LocationMap';
+
+// Profile page allows users to view and update their profile information.
 
 const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
   const { setUser } = useUser();
@@ -25,6 +29,8 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
   });
 
   const [tempUserData, setTempUserData] = useState({ ...userData });
+
+  // Fetches user profile details from API when the page loads.
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -54,6 +60,8 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
 
     fetchUserDetail();
   }, [params]);
+
+  // Validates and updates user profile information via API.
 
   const handleSave = async () => {
     // Validate name
@@ -104,9 +112,13 @@ const Profile = ({ params }: { params: Promise<{ profile: number }> }) => {
     }));
   };
 
+  // Toggles the visibility of the location selection map.
+
   const toggleMapVisibility = () => {
     setIsMapVisible(prev => !prev);
   };
+
+  // Renders the profile page with editable fields and profile picture upload.
 
   return (
     <div className="max-w-2xl mx-auto p-4">

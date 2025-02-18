@@ -1,5 +1,6 @@
 "use client";
 
+// Imports necessary components for dashboard layout and user authentication.
 import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,9 +14,15 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+//  Dashboard layout component containing:
+//    - Sidebar for navigation
+//    - Header with responsive menu
+//    - Authentication check (redirects if user not logged in)
+
 export default function DashboardLayout({ children }: LayoutProps) {
   const { user, loading } = useUser();
   
+  // Show loading state while user data is being fetched.
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -24,6 +31,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
     );
   }
 
+  // Redirect users to login page if they are not authenticated.
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -49,6 +57,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 bg-gray-950 text-white p-6">
+            // Sidebar navigation menu with links to different dashboard sections.
               <Sidebar user={user} />
             </SheetContent>
           </Sheet>
@@ -62,6 +71,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
   );
 }
 
+// Sidebar component for dashboard navigation, including user profile and logout.
 function Sidebar({ user }: { user: any }) {
   return (
     <div className="flex flex-col justify-between h-full">

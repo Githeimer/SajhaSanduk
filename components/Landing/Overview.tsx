@@ -1,5 +1,5 @@
 import { SiNextdotjs, SiTypescript, SiSupabase, SiCashapp,SiCloudinary } from "react-icons/si";
-
+import Image from "next/image";
 export function ProjectOverview() {
   return (
     <div className="bg-gray-100 p-8 rounded-md shadow-none" >
@@ -44,8 +44,8 @@ export function ProjectOverview() {
             </div>
             {/* Khalti API Card */}
             <div className="flex items-center bg-white shadow-md rounded-md p-4">
-              <SiCashapp className="text-4xl text-purple-600 mr-4" />
-              <span className="text-lg font-medium text-gray-700">Khalti API</span>
+              <Image alt="esewa" width={50} height={50} src="https://cdn-1.webcatalog.io/catalog/esewa/esewa-icon.png?v=1736149633968" className="text-4xl text-purple-600 mr-4" />
+              <span className="text-lg font-medium text-gray-700">Esewa API</span>
 
               
             </div>
