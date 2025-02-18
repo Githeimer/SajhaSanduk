@@ -1,3 +1,4 @@
+// This file handles authentication by switching between login and signup forms.
 "use client";
 
 import React from "react";
@@ -10,13 +11,18 @@ import LoginForm from "@/components/Auth/Login";
 import SignupForm from "@/components/Auth/Signup";
 
 export default function Auth() {
+  // Extract authentication parameter from the URL and enable navigation between login and signup.
   const params = useParams(); 
   const router = useRouter();
   const auth:any = params?.auth || "login"; 
 
+// Function to handle tab change between login and signup.
+// When a tab is selected, it updates the URL accordingly.
   const handleTabChange = (value: string) => {
     router.push(`/${value}`); 
   };
+
+// Renders the authentication UI with login and signup tabs.
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 p-4">
@@ -33,13 +39,16 @@ export default function Auth() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+          // Tabs allow switching between Login and Signup views dynamically.
             <Tabs defaultValue={auth} value={auth} onValueChange={handleTabChange} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-100">
                 <TabsTrigger value="login">Login</TabsTrigger>
                 <TabsTrigger value="signup">Register</TabsTrigger>
               </TabsList>
+              // Displays the Login Form when 'Login' is selected.
               <TabsContent value="login">
                 <LoginForm />
+                // Displays the Signup Form when 'Register' is selected.
               </TabsContent>
               <TabsContent value="signup">
                 <SignupForm />
