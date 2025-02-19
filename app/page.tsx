@@ -15,6 +15,7 @@ const Home = () => {
       <main className="container landing_container mx-auto py-12 ">
       <h1 className="text-3xl font-bold text-left mb-8">Our Features</h1>
       <BentoGrid />
+      
     </main>
     <ProjectOverview></ProjectOverview>
      
