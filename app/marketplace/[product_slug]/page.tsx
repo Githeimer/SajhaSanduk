@@ -100,30 +100,7 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
     fetchProductData()
   }, [params])
 
-  const handleContactLister = (email: string, phone: string) => {
-    const contactOptions = `
-      <div style="font-family: Arial, sans-serif; text-align: center;">
-        <p><strong>How would you like to contact?</strong></p>
-        <button id="emailBtn" style="margin: 5px; padding: 8px 16px; cursor: pointer;">📧 Email</button>
-        <button id="callBtn" style="margin: 5px; padding: 8px 16px; cursor: pointer;">📞 Call</button>
-      </div>
-    `;
   
-    const newWindow = window.open("", "_blank", "width=300,height=200");
-    if (!newWindow) return alert("Popup blocked! Allow popups and try again.");
-  
-    newWindow.document.body.innerHTML = contactOptions;
-  
-    newWindow.document.getElementById("emailBtn")?.addEventListener("click", () => {
-      window.location.href = `mailto:${email}`;
-      newWindow.close();
-    });
-  
-    newWindow.document.getElementById("callBtn")?.addEventListener("click", () => {
-      window.location.href = `tel:${phone}`;
-      newWindow.close();
-    });
-  };
 
   const handleRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const days = parseInt(e.target.value)
@@ -156,6 +133,14 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
     if (!product) return false
 
     try {
+
+      if(lister?.email == user?.email)
+      {
+        toast.error("This is your product you cant Rent or Buy");
+        return false;
+      }
+
+
       if (product.is_rentable) {
         if (rentalDays <= 0) {
           toast.error("Please select rental days greater than 0")
