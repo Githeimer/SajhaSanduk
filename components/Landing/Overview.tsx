@@ -13,7 +13,7 @@ export function ProjectOverview() {
             This project is designed to provide an online marketplace for
             students around Kathmandu University (KU) to buy, sell, or rent
             items seamlessly. It integrates advanced features like payment
-            processing with an escrow service, location tracking for products,
+            processing, location tracking for products,
             and a personalized dashboard for better user experience. The aim is
             to simplify transactions and improve accessibility for students.
           </p>

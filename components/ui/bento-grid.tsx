@@ -18,7 +18,7 @@ const bentoItems: BentoItem[] = [
     className: "md:col-span-2",
   },
   {
-    title: "Payment Integration with Escrow Service",
+    title: "Payment Integration with eSewa",
     description: "Easier and Seamless Payment",
     image:
       "https://raw.githubusercontent.com/khalti/khalti-sdk-android/master/images/all.png",

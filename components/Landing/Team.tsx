@@ -20,27 +20,28 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Pratistha Thapa",
-    image: "/placeholder.svg?height=40&width=40",
-    linkedin: "https://linkedin.com/in/janesmith",
-    github: "https://github.com/janesmith",
+    image: "https://i.ibb.co/yF3tMY6W/1739609996387.jpg",
+    linkedin: "https://linkedin.com/in/pratistha-thapa-648595351/",
+    github: "https://github.com/Pratistha88",
   },
   {
     name: "Aayusha Shrestha",
-    image: "/placeholder.svg?height=40&width=40",
-    linkedin: "https://linkedin.com/in/alexjohnson",
-    github: "https://github.com/alexjohnson",
+    image: "https://i.ibb.co/9kTP8XCJ/1715177822397.jpg",
+    linkedin: "https://linkedin.com/in/aayusha-shrestha-2990b32b9/",
+    github: "https://github.com/aayusha19",
   },
   {
     name: "Nischal Subedi",
-    image: "https://ibb.co/21hC7ssH",
+    image: "https://i.ibb.co/XrLKZ33M/asd.png",
     linkedin: "https://linkedin.com/in/nischal0x01",
     github: "https://github.com/nischal0x01",
+    website: "https://nischal0x01.vercel.app/",
   },
   {
     name: "Avipsa Parajuli",
-    image: "/placeholder.svg?height=40&width=40",
-    linkedin: "https://linkedin.com/in/michaellee",
-    github: "https://github.com/michaellee",
+    image: "https://i.ibb.co/chRj1Vpd/1738997911554.jpg",
+    linkedin: "https://linkedin.com/in/avipsa-parajuli-a31052308/",
+    github: "https://github.com/avxxsa",
   },
 ]
 
