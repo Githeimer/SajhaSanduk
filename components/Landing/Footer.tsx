@@ -25,6 +25,9 @@ export default function Footer() {
           <Link href="/marketplace">
             <Button variant="link" className="text-white ">Marketplace</Button>
           </Link>
+          <Link href={"https://tally.so/r/3EN1el"}>
+          <Button variant="link" className="text-white ">Contact</Button>
+          </Link>
         </div>
       </div>
 

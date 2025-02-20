@@ -1,13 +1,17 @@
 
 import supabase from '@/config/dbConfig';
 export const generateProductSlug = (name: string): string => {
-  const baseSlug = name.toLowerCase().replace(/\s+/g, '_');
-  
+  const baseSlug = name
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '') // Remove special characters except letters, numbers, and spaces
+    .replace(/\s+/g, '_'); // Replace spaces with underscores
+
   // Generate 4 random numbers
   const randomNumbers = Math.floor(1000 + Math.random() * 9000);
-  
+
   return `${baseSlug}_${randomNumbers}`;
 };
+
 
 export const createProduct = async (productData: any) => {
   try {

@@ -12,7 +12,10 @@ import axios, { AxiosError } from "axios"
 import { toast } from "sonner"
 import { useUser } from "@/hooks/userHook"
 import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
+import ContactModal from "@/components/marketplace/productpage/ContactModal"
 
+const StaticLocationMap = dynamic(() => import("@/components/marketplace/productpage/StaticMap"), { ssr: false });
 interface Product {
   id: string
   name: string
@@ -31,6 +34,7 @@ interface Lister {
   email: string
   Image: string
   phonenumber: string
+  location:Number[]
 }
 
 interface ApiResponse {
@@ -68,6 +72,8 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
           `/api/marketplace/product?product_slug=${resolvedParams.product_slug}`
         )
 
+       
+
         if (response.status === 200 && response.data.success) {
           const { productDetail, listerDetail } = response.data.data
           if (!productDetail?.[0] || !listerDetail?.[0]) {
@@ -76,7 +82,7 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
         
           setProduct(productDetail[0])
           setLister(listerDetail[0])
-          console.log(listerDetail[0])
+          
         } else {
           throw new Error(`Failed to fetch data for product: ${resolvedParams.product_slug}`)
         }
@@ -93,6 +99,31 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
 
     fetchProductData()
   }, [params])
+
+  const handleContactLister = (email: string, phone: string) => {
+    const contactOptions = `
+      <div style="font-family: Arial, sans-serif; text-align: center;">
+        <p><strong>How would you like to contact?</strong></p>
+        <button id="emailBtn" style="margin: 5px; padding: 8px 16px; cursor: pointer;">📧 Email</button>
+        <button id="callBtn" style="margin: 5px; padding: 8px 16px; cursor: pointer;">📞 Call</button>
+      </div>
+    `;
+  
+    const newWindow = window.open("", "_blank", "width=300,height=200");
+    if (!newWindow) return alert("Popup blocked! Allow popups and try again.");
+  
+    newWindow.document.body.innerHTML = contactOptions;
+  
+    newWindow.document.getElementById("emailBtn")?.addEventListener("click", () => {
+      window.location.href = `mailto:${email}`;
+      newWindow.close();
+    });
+  
+    newWindow.document.getElementById("callBtn")?.addEventListener("click", () => {
+      window.location.href = `tel:${phone}`;
+      newWindow.close();
+    });
+  };
 
   const handleRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const days = parseInt(e.target.value)
@@ -290,6 +321,7 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
                 <CreditCard className="mr-2 h-4 w-4" /> 
                 {isSubmitting ? 'Processing...' : 'Buy Now'}
               </Button>
+            
             </div>
             <Card>
               <CardContent className="pt-6">
@@ -305,13 +337,14 @@ const ProductDetail = ({ params }: { params: Promise<{ product_slug: string }> }
                       <Phone fill="gray" className="h-4" />
                       <p className="text-sm text-gray-500">{lister.phonenumber}</p>
                     </div>
+                    
                   </div>
+                  <ContactModal email={lister.email} phone={lister.phonenumber} />
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Contact Lister
-                </Button>
+              <CardFooter className="flex flex-col">
+                <StaticLocationMap latitude={lister.location[0]} longitude={lister.location[1]}></StaticLocationMap>
+               
               </CardFooter>
             </Card>
           </div>

@@ -157,7 +157,7 @@ interface PaymentState {
 
   return (
     <div className="container mx-auto p-8">
-      <Card className="max-w-md mx-auto">
+      <Card className="max-w-md mx-auto mt-20">
         <CardHeader>
           <div className="flex justify-center mb-4">
             <CheckCircle2 className="h-12 w-12 text-green-500" />
@@ -177,7 +177,7 @@ interface PaymentState {
             <p>Status: {state.paymentData?.status}</p>
           </div>
           <div className="flex justify-center mt-6">
-            <Button onClick={() => router.push('/dashboard')}>
+            <Button onClick={() => router.push('/dashboard/transcations')}>
               View Your Orders
             </Button>
           </div>

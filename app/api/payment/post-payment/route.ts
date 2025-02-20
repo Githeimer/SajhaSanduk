@@ -15,6 +15,7 @@ interface TransactionItem {
   rental_days: number;
 }
 
+// Function to process the transaction
 async function processTransaction(userId: string, transactionId: string) {
   try {
     // Fetch user's cart
@@ -39,11 +40,11 @@ async function processTransaction(userId: string, transactionId: string) {
     const cartItems: CartProduct[] = userCartData.CART;
     console.log("Cart Items:", cartItems);
 
-    // Fetch product details to get vendor IDs
+    // Fetch product details to get vendor IDs and rental status
     const productIds = cartItems.map(item => item.product_id);
     const { data: productsData, error: productsError } = await supabase
       .from("product_detail")
-      .select("id, listed_by")
+      .select("id, listed_by, is_rentable")
       .in("id", productIds);
 
     if (productsError) {
@@ -105,6 +106,9 @@ async function processTransaction(userId: string, transactionId: string) {
       throw new Error("Failed to clear cart");
     }
 
+    // Update product statuses after transaction
+    await updateProductStatus(productIds);
+
     return {
       success: true,
       message: "Transactions processed successfully",
@@ -115,6 +119,50 @@ async function processTransaction(userId: string, transactionId: string) {
   }
 }
 
+// Function to update product statuses (is_rented or is_sold)
+async function updateProductStatus(productIds: number[]) {
+  try {
+    // Fetch products to check if they are rentable
+    const { data: products, error: fetchError } = await supabase
+      .from("product_detail")
+      .select("id, is_rentable")
+      .in("id", productIds);
+
+    if (fetchError) {
+      console.error("Error fetching products:", fetchError);
+      throw new Error("Failed to fetch product details");
+    }
+
+    if (!products || products.length === 0) {
+      throw new Error("No matching products found");
+    }
+
+    // Update products one by one
+    for (const product of products) {
+      const updateData = product.is_rentable
+        ? { is_rented: true } // If rentable, mark as rented
+        : { is_sold: true }; // If not rentable, mark as sold
+
+      const { error: updateError } = await supabase
+        .from("product_detail")
+        .update(updateData)
+        .eq("id", product.id);
+
+      if (updateError) {
+        console.error(`Error updating product ID ${product.id}:`, updateError);
+        throw new Error(`Failed to update product ID ${product.id}`);
+      }
+    }
+
+    console.log("Product statuses updated successfully.");
+  } catch (error) {
+    console.error("Error in updateProductStatus:", error);
+    throw error;
+  }
+}
+
+
+// API Route: Handles POST request
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

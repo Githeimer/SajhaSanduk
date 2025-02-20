@@ -1,30 +1,67 @@
 "use client";
 import { useState, useEffect, Suspense } from "react";
-import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@/hooks/userHook";
 
 const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music", "Others", "All"];
 
 function SidebarComponent() {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [recommended, setRecommended] = useState(false);
+  const [viewMode, setViewMode] = useState<"all" | "recommended">("all");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUser();
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
+    const recommendedFromUrl = searchParams.get("recommended");
+    
     if (categoryFromUrl && categories.includes(categoryFromUrl)) {
       setSelectedCategory(categoryFromUrl);
     }
-  }, [searchParams]);
+    
+    if (recommendedFromUrl === "true") {
+      setViewMode("recommended");
+    }
+  }, [searchParams,user]);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     
     const params = new URLSearchParams(searchParams.toString());
     params.set("category", category);
+    
+    // Keep the recommendation parameter if it exists
+    if (viewMode === "recommended") {
+      params.set("recommended", "true");
+      if (user?.id) {
+        params.set("userId", user.id);
+      }
+    }
+    
+    router.push(`/marketplace?${params.toString()}`);
+  };
+
+  const handleViewModeChange = (mode: "all" | "recommended") => {
+    setViewMode(mode);
+    
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (mode === "recommended") {
+      params.set("recommended", "true");
+      if (user?.id) {
+        params.set("userId", user.id);
+      }
+    } else {
+      params.delete("recommended");
+      params.delete("userId");
+    }
+    
+    // Keep the category parameter if it exists
+    if (selectedCategory !== "All") {
+      params.set("category", selectedCategory);
+    }
     
     router.push(`/marketplace?${params.toString()}`);
   };
@@ -51,23 +88,30 @@ function SidebarComponent() {
         </RadioGroup>
       </div>
 
-      <div className="mb-6">
-        <h3 className="text-sm font-medium mb-2">Recommendation</h3>
-        <RadioGroup
-          value={recommended ? "recommended" : "all"}
-          onValueChange={(value) => setRecommended(value === "recommended")}
-          className="space-y-2"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="recommended" id="recommended" />
-            <label htmlFor="recommended" className="text-sm font-medium leading-none cursor-pointer">
-              Recommended Only
-            </label>
-           
-          </div>
-          <p className="text-gray-400 text-sm">This Feature uses User's Location and show the nearest located product</p>
-        </RadioGroup>
-      </div>
+      {user && (
+        <div className="mb-6">
+          <h3 className="text-sm font-medium mb-2">View Mode</h3>
+          <RadioGroup
+            value={viewMode}
+            onValueChange={handleViewModeChange}
+            className="space-y-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all" id="all" />
+              <label htmlFor="all" className="text-sm font-medium leading-none cursor-pointer">
+                All Products
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="recommended" id="recommended" />
+              <label htmlFor="recommended" className="text-sm font-medium leading-none cursor-pointer">
+                Near Me (1km radius)
+              </label>
+            </div>
+          </RadioGroup>
+          <p className="text-gray-400 text-sm mt-2">Shows products within 1km of your location</p>
+        </div>
+      )}
     </aside>
   );
 }

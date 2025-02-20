@@ -1,4 +1,4 @@
-// Route handler (api/products/route.ts)
+// api/products/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import ExtractProductsfromDB from "@/helpers/db/ProductsAsPerCategory";
 
@@ -14,11 +14,16 @@ export async function GET(request: NextRequest) {
   
   const category = searchParams.get('category') || 'All';
   const search = searchParams.get('search') || '';
+  const recommended = searchParams.get('recommended') === 'true';
+  const userId = searchParams.get('userId'); 
+  console.log(searchParams);
 
   try {
     const response = await ExtractProductsfromDB({
       category,
-      search
+      search,
+      recommended,
+      userId: recommended ? userId || undefined : undefined
     });
 
     return NextResponse.json(response);

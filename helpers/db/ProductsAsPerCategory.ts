@@ -1,5 +1,7 @@
+// helpers/db/ProductsAsPerCategory.ts
 import supabase from "@/config/dbConfig";
 import UserDetailById from "./UserDetailsById";
+import { isWithinRadius } from "../HabersineAlgorithm";
 
 interface ProductDetail {
   id: number;
@@ -27,9 +29,14 @@ interface ProductsResponse {
 interface QueryParams {
   category?: string;
   search?: string;
+  recommended?: boolean;
+  userId?: string;
 }
 
-const categories = ["Electronics", "Mechanical", "Books", "Tools and DIY", "Music", "Others"];
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
 
 async function fetchUserDetailsForProducts(products: ProductDetail[]): Promise<ProductDetail[]> {
   const userDetailPromises = products.map(async (product) => {
@@ -44,14 +51,15 @@ async function fetchUserDetailsForProducts(products: ProductDetail[]): Promise<P
 export default async function ExtractProductsfromDB({
   category = "All",
   search,
+  recommended = false,
+  userId,
 }: QueryParams): Promise<ProductsResponse> {
   try {
-    let query = supabase.from("product_detail").select("*").eq("is_rented", false);
+    let query = supabase.from("product_detail").select("*").eq("is_rented", false).eq("is_sold",false);
 
     if (search) {
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     }
-
 
     if (category && category !== "All") {
       query = query.eq("Category", category);
@@ -74,7 +82,68 @@ export default async function ExtractProductsfromDB({
       };
     }
 
-    const productsWithUserDetails = await fetchUserDetailsForProducts(totalProducts);
+    let productsWithUserDetails = await fetchUserDetailsForProducts(totalProducts);
+
+    // Handle location-based filtering
+    if (recommended && userId) {
+      // Get user's location array
+      const { data: userData, error: userError } = await supabase
+        .from('user_info')
+        .select('location')
+        .eq('id', userId)
+        .single();
+
+      if (userError || !userData?.location || userData.location.length < 2) {
+        return {
+          success: false,
+          message: "User location not found",
+          error: userError?.message,
+        };
+      }
+
+      const userCoordinates: Coordinates = {
+        latitude: userData.location[0],
+        longitude: userData.location[1]
+      };
+
+      // Get all seller locations in one query
+      const { data: sellerLocations, error: sellerError } = await supabase
+        .from('user_info')
+        .select('id, location')
+        .in('id', productsWithUserDetails.map(p => p.listed_by));
+
+      if (sellerError || !sellerLocations) {
+        return {
+          success: false,
+          message: "Failed to fetch seller locations",
+          error: sellerError?.message,
+        };
+      }
+
+      // Create a map of seller IDs to their locations
+      const sellerLocationMap = new Map(
+        sellerLocations.map(seller => [
+          seller.id,
+          {
+            latitude: seller.location[0],
+            longitude: seller.location[1]
+          }
+        ])
+      );
+
+      // Filter products based on seller locations
+      productsWithUserDetails = productsWithUserDetails.filter(product => {
+        const sellerLocation = sellerLocationMap.get(product.listed_by);
+        
+        if (!sellerLocation) return false;
+
+        return isWithinRadius(
+          userCoordinates,
+          sellerLocation,
+          1 // 1km radius
+        );
+      });
+    }
 
     return {
       success: true,
