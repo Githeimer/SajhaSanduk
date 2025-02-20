@@ -39,16 +39,13 @@ export default function Auth() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-          // Tabs allow switching between Login and Signup views dynamically.
             <Tabs defaultValue={auth} value={auth} onValueChange={handleTabChange} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-100">
                 <TabsTrigger value="login">Login</TabsTrigger>
                 <TabsTrigger value="signup">Register</TabsTrigger>
               </TabsList>
-              // Displays the Login Form when 'Login' is selected.
               <TabsContent value="login">
                 <LoginForm />
-                // Displays the Signup Form when 'Register' is selected.
               </TabsContent>
               <TabsContent value="signup">
                 <SignupForm />
