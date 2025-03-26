@@ -21,7 +21,7 @@ const bentoItems: BentoItem[] = [
     title: "Payment Integration with eSewa",
     description: "Easier and Seamless Payment",
     image:
-      "https://raw.githubusercontent.com/khalti/khalti-sdk-android/master/images/all.png",
+      "https://i.ibb.co/B94RgWL/Screenshot-2025-03-26-205949.png",
   },
   {
     title: "Active Location of Product Lister",
